@@ -1,7 +1,11 @@
-import React from 'react'
-
-export default function Home() {
+function Home() {
   return (
-    <div>Home</div>
-  )
+    <div className="p-10">
+      <h1 className="text-4xl font-bold text-red-200">
+        YouTube Clone
+      </h1>
+    </div>
+  );
 }
+
+export default Home;
