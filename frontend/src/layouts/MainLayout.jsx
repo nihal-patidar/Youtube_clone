@@ -1,7 +1,21 @@
-import React from 'react'
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/common/Navbar";
+import Sidebar from "../components/common/Sidebar";
 
-export default function MainLayout() {
+function MainLayout() {
   return (
-    <div>MainLayout</div>
-  )
+    <>
+      <Navbar />
+
+      <div>
+        <Sidebar />
+
+        <main>
+          <Outlet />
+        </main>
+      </div>
+    </>
+  );
 }
+
+export default MainLayout;
