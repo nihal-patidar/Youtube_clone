@@ -7,6 +7,7 @@ import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Dashboard from '../pages/Dashboard'
 import NotFound from '../pages/NotFound'
+import CreateChannel from '../pages/CreateChannel'
 
 const routes = createBrowserRouter([
     {
@@ -24,6 +25,10 @@ const routes = createBrowserRouter([
             {
                 path : '/channel/:channelId',
                 element : <Channel />
+            },
+            {
+                path : '/create-channel',
+                element : <CreateChannel />
             }
         ],
 
