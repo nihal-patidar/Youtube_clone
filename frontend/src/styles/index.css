@@ -1,0 +1,289 @@
+@import "tailwindcss" ;
+
+
+/* ==========================================
+   THEME VARIABLES
+========================================== */
+
+:root {
+  /* Brand */
+  --color-primary: #ff0000;
+  --color-primary-hover: #cc0000;
+
+  /* Light Theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9f9;
+  --bg-tertiary: #f1f1f1;
+
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --text-muted: #909090;
+
+  --border-color: #d3d3d3;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.10);
+
+  --navbar-height: 56px;
+  --sidebar-width: 240px;
+
+  color-scheme: light;
+}
+
+/* ==========================================
+   DARK THEME
+========================================== */
+
+.dark {
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #181818;
+  --bg-tertiary: #272727;
+
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --text-muted: #717171;
+
+  --border-color: #3f3f3f;
+
+  color-scheme: dark;
+}
+
+/* ==========================================
+   GLOBAL RESET
+========================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  overflow-x: hidden;
+}
+
+/* ==========================================
+   SCROLLBAR
+========================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #717171;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #909090;
+}
+
+/* ==========================================
+   COMMON UTILITIES
+========================================== */
+
+.page-container {
+  width: 100%;
+  padding: 1rem;
+}
+
+.section-gap {
+  margin-top: 1.5rem;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transition-default {
+  transition: all 0.2s ease;
+}
+
+/* ==========================================
+   BUTTON UTILITIES
+========================================== */
+
+.btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  opacity: 0.85;
+}
+
+/* ==========================================
+   INPUT UTILITIES
+========================================== */
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+}
+
+/* ==========================================
+   CARD UTILITIES
+========================================== */
+
+.card {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  overflow: hidden;
+
+  box-shadow: var(--shadow-sm);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+}
+
+/* ==========================================
+   VIDEO GRID
+========================================== */
+
+.video-grid {
+  display: grid;
+  gap: 1.25rem;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(300px, 1fr));
+}
+
+/* ==========================================
+   TEXT UTILITIES
+========================================== */
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   HIDE SCROLLBAR
+========================================== */
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+/* ==========================================
+   YOUTUBE FILTER BUTTON
+========================================== */
+
+.filter-btn {
+  padding: 8px 14px;
+
+  border-radius: 8px;
+
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+
+  white-space: nowrap;
+
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  opacity: 0.85;
+}
+
+.filter-btn.active {
+  background: white;
+  color: black;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+  .video-grid {
+    grid-template-columns: 1fr;
+  }
+
+  :root {
+    --sidebar-width: 72px;
+  }
+}
