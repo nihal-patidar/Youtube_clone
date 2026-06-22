@@ -4,8 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 // define initialState 
 const initialState = {
     user : null,
-    token : localStorage.getItem(import.meta.env.USER_TOKEN) || null,
-    isAuthenticated : !!localStorage.getItem(import.meta.env.USER_TOKEN)
+    token : localStorage.getItem("youtube-user-token") || null,
+    isAuthenticated : !!localStorage.getItem("youtube-user-token")
 }
 
 const authSlice = createSlice({
@@ -28,4 +28,4 @@ const authSlice = createSlice({
 })
 
 export const {login , logout} = authSlice.actions ;
-export default authSlice.reducers ;
+export default authSlice.reducer ;
