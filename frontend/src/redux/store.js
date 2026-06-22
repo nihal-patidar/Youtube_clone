@@ -1,9 +1,9 @@
 import configureStore from '@reduxjs/toolkit' ;
 
 
-const app = configureStore({
+const appStore = configureStore({
 
 })
 
 
-export default app ;
+export default appStore ;
