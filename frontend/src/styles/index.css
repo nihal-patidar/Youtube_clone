@@ -1,107 +1,87 @@
-@import "tailwindcss" ;
+@import "tailwindcss";
 
-
-/* ==========================================
+/* =========================
    THEME VARIABLES
-========================================== */
+========================= */
 
 :root {
-  /* Brand */
-  --color-primary: #ff0000;
-  --color-primary-hover: #cc0000;
+  --navbar-height: 56px;
 
-  /* Light Theme */
+  /* LIGHT THEME */
   --bg-primary: #ffffff;
-  --bg-secondary: #f9f9f9;
-  --bg-tertiary: #f1f1f1;
+  --bg-secondary: #f2f2f2;
+  --bg-hover: #e5e5e5;
 
   --text-primary: #0f0f0f;
   --text-secondary: #606060;
-  --text-muted: #909090;
 
   --border-color: #d3d3d3;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 8px rgba(0,0,0,0.10);
+  --yt-red: #ff0000;
+  --yt-red-hover: #cc0000;
 
-  --navbar-height: 56px;
   --sidebar-width: 240px;
+  --sidebar-mini-width: 72px;
 
-  color-scheme: light;
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
 }
 
-/* ==========================================
-   DARK THEME
-========================================== */
+/* DARK THEME */
 
-.dark {
+html.dark {
   --bg-primary: #0f0f0f;
   --bg-secondary: #181818;
-  --bg-tertiary: #272727;
+  --bg-hover: #272727;
 
-  --text-primary: #ffffff;
+  --text-primary: #f1f1f1;
   --text-secondary: #aaaaaa;
-  --text-muted: #717171;
 
-  --border-color: #3f3f3f;
+  --border-color: #303030;
 
-  color-scheme: dark;
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* ==========================================
-   GLOBAL RESET
-========================================== */
+/* =========================
+   BASE
+========================= */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
-html,
-body,
-#root {
-  width: 100%;
-  min-height: 100%;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  min-height: 100vh;
+
   background: var(--bg-primary);
   color: var(--text-primary);
 
   font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
+    "Roboto",
+    "Segoe UI",
     sans-serif;
+
+  overflow-x: hidden;
 
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
-
-  overflow-x: hidden;
 }
 
-/* ==========================================
+/* =========================
    SCROLLBAR
-========================================== */
+========================= */
 
 ::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #717171;
+  background: #707070;
   border-radius: 999px;
 }
 
@@ -109,181 +89,134 @@ body {
   background: #909090;
 }
 
-/* ==========================================
-   COMMON UTILITIES
-========================================== */
+/* =========================
+   GLOBAL
+========================= */
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* =========================
+   LAYOUT
+========================= */
 
 .page-container {
-  width: 100%;
-  padding: 1rem;
-}
-
-.section-gap {
-  margin-top: 1.5rem;
-}
-
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.flex-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.transition-default {
-  transition: all 0.2s ease;
-}
-
-/* ==========================================
-   BUTTON UTILITIES
-========================================== */
-
-.btn {
-  border: none;
-  outline: none;
-  cursor: pointer;
-
-  padding: 0.65rem 1rem;
-  border-radius: 999px;
-
-  transition: all 0.2s ease;
-}
-
-.btn-primary {
-  background: var(--color-primary);
-  color: white;
-}
-
-.btn-primary:hover {
-  background: var(--color-primary-hover);
-}
-
-.btn-secondary {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-}
-
-.btn-secondary:hover {
-  opacity: 0.85;
-}
-
-/* ==========================================
-   INPUT UTILITIES
-========================================== */
-
-.input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-
+  min-height: 100vh;
   background: var(--bg-primary);
-  color: var(--text-primary);
-
-  outline: none;
 }
 
-.input:focus {
-  border-color: var(--color-primary);
+.main-content {
+  padding-top: var(--navbar-height);
 }
 
-/* ==========================================
-   CARD UTILITIES
-========================================== */
+/* =========================
+   REUSABLE
+========================= */
 
-.card {
-  background: var(--bg-primary);
-  border-radius: 12px;
-  overflow: hidden;
-
-  box-shadow: var(--shadow-sm);
+.youtube-card {
+  transition: transform var(--transition-fast);
 }
 
-.card-hover:hover {
+.youtube-card:hover {
   transform: translateY(-2px);
 }
 
-/* ==========================================
-   VIDEO GRID
-========================================== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
 
-.video-grid {
-  display: grid;
-  gap: 1.25rem;
-
-  grid-template-columns:
-    repeat(auto-fill, minmax(300px, 1fr));
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ==========================================
-   TEXT UTILITIES
-========================================== */
+/* =========================
+   THUMBNAILS
+========================= */
 
-.text-primary {
-  color: var(--text-primary);
+.thumbnail {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
 }
 
-.text-secondary {
-  color: var(--text-secondary);
+.thumbnail img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
+  object-fit: cover;
+
+  transition: transform 0.35s ease;
 }
 
-.text-muted {
-  color: var(--text-muted);
+.thumbnail:hover img {
+  transform: scale(1.04);
 }
 
-/* ==========================================
-   HIDE SCROLLBAR
-========================================== */
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.hide-scrollbar {
-  scrollbar-width: none;
-}
-
-/* ==========================================
-   YOUTUBE FILTER BUTTON
-========================================== */
+/* =========================
+   FILTER BUTTON
+========================= */
 
 .filter-btn {
   padding: 8px 14px;
 
   border-radius: 8px;
 
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-
   white-space: nowrap;
 
-  transition: all 0.2s ease;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+
+  transition: background-color 0.2s ease;
 }
 
 .filter-btn:hover {
-  opacity: 0.85;
+  background: var(--bg-hover);
 }
 
 .filter-btn.active {
-  background: white;
-  color: black;
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
-/* ==========================================
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 10px 12px;
+
+  border-radius: 10px;
+
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background: var(--bg-hover);
+}
+
+.sidebar-link.active {
+  background: var(--bg-hover);
+  font-weight: 500;
+}
+
+/* =========================
    RESPONSIVE
-========================================== */
+========================= */
 
-@media (max-width: 768px) {
-  .video-grid {
-    grid-template-columns: 1fr;
-  }
-
+@media (max-width: 1024px) {
   :root {
     --sidebar-width: 72px;
+  }
+}
+
+@media (max-width: 640px) {
+  .thumbnail {
+    border-radius: 10px;
   }
 }
