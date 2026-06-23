@@ -1,6 +1,7 @@
-// import VideoRender from "./VideoRender";
 // import VideoSuggestionBox from "./VideoSuggestionBox";
-// import CommentBox from "./CommentBox";
+import CommentBox from "../components/comments/CommentBoxs";
+
+import VideoPlayer from "../components/video/VideoPlayer";
 
 export default function VideoPage() {
   return (
@@ -18,8 +19,8 @@ export default function VideoPage() {
       >
         {/* LEFT SIDE */}
         <div className="min-w-0">
-          {/* <VideoRender /> */}
-          {/* <CommentBox /> */}
+          <VideoPlayer />
+          <CommentBox />
         </div>
 
         {/* RIGHT SIDE */}
