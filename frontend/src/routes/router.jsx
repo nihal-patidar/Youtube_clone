@@ -9,6 +9,8 @@ import Dashboard from '../pages/Dashboard'
 import NotFound from '../pages/NotFound'
 import CreateChannel from '../pages/CreateChannel'
 import VideoPage from '../pages/VideoPage'
+import MyChannel from '../pages/MyChannel'
+import ChannelLayout from '../components/channel/ChannelLayout'
 
 const routes = createBrowserRouter([
     {
@@ -20,17 +22,24 @@ const routes = createBrowserRouter([
                 element : <Home />
             },
             {
-                path : '/video/:videoId',
+                path : 'video/:videoId',
                 element : <VideoPage />
             },
             {
-                path : '/channel/:channelId',
-                element : <Channel />
+                path : "channel",
+                element : <ChannelLayout />,
+                children : [
+                    {
+                        path : 'create',
+                        element : <CreateChannel />
+                    },
+                    {
+                        path : ':id',
+                        element : <MyChannel />
+                    }
+                ]
             },
-            {
-                path : '/create-channel',
-                element : <CreateChannel />
-            }
+
         ],
 
 
