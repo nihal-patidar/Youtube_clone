@@ -1,4 +1,4 @@
-// import VideoSuggestionBox from "./VideoSuggestionBox";
+import VideoSuggestionBox from "../components/common/SuggestionBox";
 import CommentBox from "../components/comments/CommentBoxs";
 
 import VideoPlayer from "../components/video/VideoPlayer";
@@ -25,7 +25,7 @@ export default function VideoPage() {
 
         {/* RIGHT SIDE */}
         <div className="min-w-0">
-          {/* <VideoSuggestionBox /> */}
+          <VideoSuggestionBox />
         </div>
       </div>
     </div>
