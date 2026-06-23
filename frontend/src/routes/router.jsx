@@ -1,13 +1,14 @@
 import {createBrowserRouter} from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
 import Home from '../pages/Home'
-import VideoPlayer from '../pages/VideoPlayer'
+import VideoPlayer from '../pages/VideoPage'
 import Channel from '../pages/Channel'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Dashboard from '../pages/Dashboard'
 import NotFound from '../pages/NotFound'
 import CreateChannel from '../pages/CreateChannel'
+import VideoPage from '../pages/VideoPage'
 
 const routes = createBrowserRouter([
     {
@@ -19,8 +20,8 @@ const routes = createBrowserRouter([
                 element : <Home />
             },
             {
-                path : '/vedio/:vedioId',
-                element : <VideoPlayer />
+                path : '/video/:videoId',
+                element : <VideoPage />
             },
             {
                 path : '/channel/:channelId',
