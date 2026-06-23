@@ -1,332 +1,178 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 export default function Register() {
-  const [registerData, setRegisterData] =
-    useState({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [registerData, setRegisterData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [errors, setErrors] = useState({});
-
   const handleChange = (e) => {
-    setRegisterData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-
-    setErrors((prev) => ({
-      ...prev,
-      [e.target.name]: "",
-    }));
+    setRegisterData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
   };
-
-  const validate = () => {
-    const newErrors = {};
-
-    if (!registerData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!registerData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (
-      !/\S+@\S+\.\S+/.test(registerData.email)
-    ) {
-      newErrors.email = "Invalid email";
-    }
-
-    if (!registerData.password) {
-      newErrors.password =
-        "Password is required";
-    } else if (
-      registerData.password.length < 6
-    ) {
-      newErrors.password =
-        "Minimum 6 characters";
-    }
-
-    if (
-      registerData.confirmPassword !==
-      registerData.password
-    ) {
-      newErrors.confirmPassword =
-        "Passwords do not match";
-    }
-
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!validate()) return;
-
-    try {
-      console.log(
-        "User Registered:",
-        registerData
-      );
-
-      // const response = await api.post("/register", registerData);
-
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(registerData);
   };
-
   return (
-    <div
-      className="
-        min-h-screen
-        flex
-        items-center
-        justify-center
-        bg-[var(--bg-primary)]
-        px-4
-      "
-    >
-      <div
-        className="
-          w-full
-          max-w-md
-
-          rounded-3xl
-          border
-          border-[var(--border-color)]
-
-          bg-[var(--bg-primary)]
-
-          shadow-xl
-
-          p-8
-        "
-      >
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <h1
-            className="
-              text-3xl
-              font-bold
-              text-red-600
-            "
-          >
-            YouTube
-          </h1>
-
-          <h2
-            className="
-              text-2xl
-              font-semibold
-              mt-4
-            "
-          >
-            Create Account
-          </h2>
-
-          <p
-            className="
-              text-sm
-              text-[var(--text-secondary)]
-              mt-2
-            "
-          >
-            Continue to YouTube Clone
-          </p>
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
-          {/* Name */}
+    <div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center px-4 py-10">
+      {" "}
+      <div className="w-full max-w-5xl bg-white border border-gray-200 rounded-3xl p-6 sm:p-10 shadow-sm">
+        {" "}
+        <div className="w-fit">
+          {" "}
+          {/* Left Section */}{" "}
           <div>
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={registerData.name}
-              onChange={handleChange}
-              className="
-                w-full
-                px-4
-                py-3
-
-                rounded-xl
-
-                border
-                border-[var(--border-color)]
-
-                bg-transparent
-
-                focus:border-blue-500
-                focus:ring-2
-                focus:ring-blue-500/20
-
-                outline-none
-              "
-            />
-
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.name}
-              </p>
-            )}
-          </div>
-
-          {/* Email */}
-          <div>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={registerData.email}
-              onChange={handleChange}
-              className="
-                w-full
-                px-4
-                py-3
-
-                rounded-xl
-
-                border
-                border-[var(--border-color)]
-
-                bg-transparent
-
-                focus:border-blue-500
-                focus:ring-2
-                focus:ring-blue-500/20
-
-                outline-none
-              "
-            />
-
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.email}
-              </p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={registerData.password}
-              onChange={handleChange}
-              className="
-                w-full
-                px-4
-                py-3
-
-                rounded-xl
-
-                border
-                border-[var(--border-color)]
-
-                bg-transparent
-
-                focus:border-blue-500
-                focus:ring-2
-                focus:ring-blue-500/20
-
-                outline-none
-              "
-            />
-
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password}
-              </p>
-            )}
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={
-                registerData.confirmPassword
-              }
-              onChange={handleChange}
-              className="
-                w-full
-                px-4
-                py-3
-
-                rounded-xl
-
-                border
-                border-[var(--border-color)]
-
-                bg-transparent
-
-                focus:border-blue-500
-                focus:ring-2
-                focus:ring-blue-500/20
-
-                outline-none
-              "
-            />
-
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.confirmPassword}
-              </p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="
-              w-full
-
-              py-3
-
-              rounded-xl
-
-              bg-blue-600
-              hover:bg-blue-700
-
-              text-white
-              font-medium
-
-              transition
-            "
-          >
-            Create Account
-          </button>
-        </form>
-
-        <div
-          className="
-            mt-6
-            text-center
-            text-sm
-          "
-        >
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="
-              text-blue-500
-              hover:underline
-            "
-          >
-            Sign In
-          </Link>
-        </div>
-      </div>
+            {" "}
+            {/* Logo */}{" "}
+            <h1 className="text-3xl font-semibold mb-6">
+              {" "}
+              <span className="text-blue-500">G</span>{" "}
+              <span className="text-red-500">o</span>{" "}
+              <span className="text-yellow-500">o</span>{" "}
+              <span className="text-blue-500">g</span>{" "}
+              <span className="text-green-500">l</span>{" "}
+              <span className="text-red-500">e</span>{" "}
+            </h1>{" "}
+            <h2 className="text-3xl font-normal text-gray-900">
+              {" "}
+              Create your Google Account{" "}
+            </h2>{" "}
+            <p className="text-gray-600 mt-2 mb-8">
+              {" "}
+              to continue to YouTube{" "}
+            </p>{" "}
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {" "}
+              {/* Name Fields */}{" "}
+              <div className="grid sm:grid-cols-2 gap-4">
+                {" "}
+                <div>
+                  {" "}
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="First name"
+                    value={registerData.firstName}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                  />{" "}
+                </div>{" "}
+                <div>
+                  {" "}
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Last name"
+                    value={registerData.lastName}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                  />{" "}
+                </div>{" "}
+              </div>{" "}
+              {/* Email */}{" "}
+              <div>
+                {" "}
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Your email address"
+                  value={registerData.email}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                />{" "}
+                <p className="text-xs text-gray-500 mt-2">
+                  {" "}
+                  You'll need to confirm that this email belongs to you.{" "}
+                </p>{" "}
+              </div>{" "}
+              <button
+                type="button"
+                className="text-blue-600 font-medium text-sm hover:underline"
+              >
+                {" "}
+                Create a new Gmail address instead{" "}
+              </button>{" "}
+              {/* Password */}{" "}
+              <div>
+                {" "}
+                <div className="grid sm:grid-cols-[1fr_1fr_auto] gap-4">
+                  {" "}
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Password"
+                    value={registerData.password}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                  />{" "}
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Confirm"
+                    value={registerData.confirmPassword}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                  />{" "}
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="flex items-center justify-center text-gray-500"
+                  >
+                    {" "}
+                    {showPassword ? (
+                      <EyeOff size={22} />
+                    ) : (
+                      <Eye size={22} />
+                    )}{" "}
+                  </button>{" "}
+                </div>{" "}
+                <p className="text-xs text-gray-500 mt-2">
+                  {" "}
+                  Use 8 or more characters with a mix of letters, numbers &
+                  symbols{" "}
+                </p>{" "}
+              </div>{" "}
+              {/* Footer */}{" "}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-6 gap-4">
+                {" "}
+                <Link
+                  to="/login"
+                  className="text-blue-600 font-medium hover:underline"
+                >
+                  {" "}
+                  Sign in instead{" "}
+                </Link>{" "}
+                <button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded"
+                >
+                  {" "}
+                  Next{" "}
+                </button>{" "}
+              </div>{" "}
+            </form>{" "}
+          </div>{" "}
+          {/* Right Section */}{" "}
+          {/* <div className="hidden lg:flex flex-col items-center text-center">
+            {" "}
+            <img
+              src="/google-auth-side.png"
+              alt="Google"
+              className="w-64"
+            />{" "}
+            <p className="mt-6 text-gray-700 text-lg">
+              {" "}
+              One account. All of Google <br /> working for you.{" "}
+            </p>{" "}
+          </div>{" "} */}
+        </div>{" "}
+      </div>{" "}
     </div>
   );
 }
