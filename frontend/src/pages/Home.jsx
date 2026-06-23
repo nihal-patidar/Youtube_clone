@@ -1,15 +1,17 @@
-import { useEffect } from "react";
-import api from "../services/api";
+import VideoGrid from "../components/video/VideoGrid";
+import { dummyVideos } from "../data/dummyVideos";
 
 function Home() {
-
-
   return (
-    <div className="p-10">
-      <h1 className="text-4xl font-bold text-red-200">
-        YouTube Clone
-      </h1>
-    </div>
+    <section
+      className="
+        p-4
+        sm:p-6
+        lg:p-8
+      "
+    >
+      <VideoGrid videos={dummyVideos} />
+    </section>
   );
 }
 

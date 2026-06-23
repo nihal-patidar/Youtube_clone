@@ -90,7 +90,7 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
 
         <div className="flex items-center gap-1 cursor-pointer select-none">
           <span className="text-red-600 text-2xl font-bold">
-            ▶
+            <img src="youtube.png" alt="youtube" />
           </span>
 
           <h1 className="hidden sm:block text-xl font-semibold">

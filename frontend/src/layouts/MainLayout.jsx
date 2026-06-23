@@ -1,32 +1,40 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/common/Navbar";
-import Sidebar from "../components/common/Sidebar";
 import { useState } from "react";
 
+import Navbar from "../components/common/Navbar";
+import Sidebar from "../components/common/Sidebar";
+
 function MainLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] =
+    useState(true);
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)]">
-      {/* Top Navigation */}
+    <>
+      <Navbar
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
 
-      <Navbar setIsSidebarOpen={setIsSidebarOpen} />
+      <Sidebar
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
 
-      {/* Main Section */}
-      <div className="flex pt-[var(--navbar-height)]">
-        {/* Sidebar */}
+      <main
+        className={`
+          pt-[var(--navbar-height)]
+          transition-all
+          duration-300
 
-        <Sidebar
-          isSidebarOpen={isSidebarOpen}
-          setIsSidebarOpen={setIsSidebarOpen}
-        />
-
-        {/* Page Content */}
-        <main className="flex-1 p-4 overflow-x-hidden">
-          <Outlet />
-        </main>
-      </div>
-    </div>
+          ${
+            isSidebarOpen
+              ? "md:ml-[240px]"
+              : "md:ml-[72px]"
+          }
+        `}
+      >
+        <Outlet />
+      </main>
+    </>
   );
 }
 
