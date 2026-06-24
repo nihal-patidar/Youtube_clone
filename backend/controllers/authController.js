@@ -9,10 +9,7 @@ const registerSchema = z.object({
     .min(3, "Name must be at least 3 characters")
     .max(30, "Name cannot exceed 30 characters"),
 
-  email: z
-    .string()
-    .trim()
-    .email("Invalid email address"),
+  email: z.string().trim().email("Invalid email address"),
 
   password: z
     .string()
@@ -29,22 +26,23 @@ const register = async (req, res) => {
 
     // Check Existing User via email or username // both should unique
     const existingUser = await User.findOne({
-      $or: [
-        { email },
-        { username: name }
-      ],
+      $or: [{ email }, { username: name }],
     });
 
-    if (existingUser) { 
-        // duplicate -> status 409
-      return res.status(409).json({  
+    if (existingUser) {
+      // duplicate -> status 409
+      return res.status(409).json({
         success: false,
         message: "User already exists",
       });
     }
 
-    // Hash Password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash Password using bcrypt
+    // const hashedPassword = await bcrypt.hash(password, 10);
+
+    const pepperedPassword = password + process.env.PASSWORD_PEPPER;
+
+    const hashedPassword = await bcrypt.hash(pepperedPassword, 10);
 
     // Create User
     const user = await User.create({
@@ -61,9 +59,7 @@ const register = async (req, res) => {
       message: "User registered successfully",
       data: createdUser,
     });
-
   } catch (error) {
-
     // Zod Validation Errors
     if (error instanceof z.ZodError) {
       return res.status(400).json({
@@ -81,5 +77,4 @@ const register = async (req, res) => {
   }
 };
 
-
-export  { register } ;
+export { register };
