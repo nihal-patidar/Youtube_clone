@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
-import {jwt } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { z } from "zod";
 
 
@@ -93,7 +93,7 @@ const register = async (req, res) => {
 };
 
 
-export const login = async (req, res) => {
+const login = async (req, res) => {
   try {
     // Body Validation
     const validatedData = loginSchema.parse(req.body);
@@ -112,7 +112,7 @@ export const login = async (req, res) => {
 
     // Compare Password
     const isPasswordCorrect = await bcrypt.compare(
-      password,
+      password+process.env.PASSWORD_PEPPER,
       user.password
     );
 
@@ -190,4 +190,4 @@ export const login = async (req, res) => {
 };
 
 
-export { register };
+export { register , login };
