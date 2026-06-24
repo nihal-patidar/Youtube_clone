@@ -123,45 +123,45 @@ export const login = async (req, res) => {
       });
     }
 
-    // // Access Token
-    // const accessToken = jwt.sign(
-    //   {
-    //     id: user._id,
-    //     email: user.email,
-    //     role: user.role,
-    //   },
-    //   process.env.ACCESS_TOKEN_SECRET,
-    //   {
-    //     expiresIn: "15m",
-    //   }
-    // );
+    // Access Token
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: "15m",
+      }
+    );
 
-    // // Refresh Token
-    // const refreshToken = jwt.sign(
-    //   {
-    //     id: user._id,
-    //   },
-    //   process.env.REFRESH_TOKEN_SECRET,
-    //   {
-    //     expiresIn: "7d",
-    //   }
-    // );
+    // Refresh Token
+    const refreshToken = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     // Save Refresh Token
-    // user.refreshToken = refreshToken;
-    // await user.save();
+    user.refreshToken = refreshToken;
+    await user.save();
 
-    // // Remove Sensitive Data
-    // const loggedInUser = await User.findById(user._id)
-    //   .select("-password -refreshToken");
+    // Remove Sensitive Data
+    const loggedInUser = await User.findById(user._id)
+      .select("-password -refreshToken");
 
-    // // Send Refresh Token as Cookie
-    // res.cookie("refreshToken", refreshToken, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    //   sameSite: "strict",
-    //   maxAge: 7 * 24 * 60 * 60 * 1000,
-    // });
+    // Send Refresh Token as Cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     return res.status(200).json({
       success: true,
