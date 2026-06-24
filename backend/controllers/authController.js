@@ -213,4 +213,68 @@ const logout = async (req, res) => {
     });
   }
 };
-export { register, login , logout };
+
+const refreshToken = async (req, res) => {
+  try {
+
+    const incomingRefreshToken =
+      req.cookies?.refreshToken;
+
+    if (!incomingRefreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token missing",
+      });
+    }
+
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    const user = await User.findById(
+      decodedToken.id
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (
+      user.refreshToken !== incomingRefreshToken
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+    }
+
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: "15m",
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      accessToken,
+    });
+
+  } catch (error) {
+
+    return res.status(401).json({
+      success: false,
+      message: "Refresh token expired or invalid",
+    });
+  }
+};
+export { register, login , logout , refreshToken};
