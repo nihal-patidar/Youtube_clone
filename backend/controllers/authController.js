@@ -1,8 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 import { z } from "zod";
-
 
 const registerSchema = z.object({
   name: z
@@ -19,16 +18,10 @@ const registerSchema = z.object({
     .max(20, "Password cannot exceed 20 characters"),
 });
 
-
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .email("Please enter a valid email address"),
+  email: z.string().trim().email("Please enter a valid email address"),
 
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const register = async (req, res) => {
@@ -92,7 +85,6 @@ const register = async (req, res) => {
   }
 };
 
-
 const login = async (req, res) => {
   try {
     // Body Validation
@@ -112,8 +104,8 @@ const login = async (req, res) => {
 
     // Compare Password
     const isPasswordCorrect = await bcrypt.compare(
-      password+process.env.PASSWORD_PEPPER,
-      user.password
+      password + process.env.PASSWORD_PEPPER,
+      user.password,
     );
 
     if (!isPasswordCorrect) {
@@ -133,7 +125,7 @@ const login = async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: "15m",
-      }
+      },
     );
 
     // Refresh Token
@@ -144,7 +136,7 @@ const login = async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     // Save Refresh Token
@@ -152,8 +144,9 @@ const login = async (req, res) => {
     await user.save();
 
     // Remove Sensitive Data
-    const loggedInUser = await User.findById(user._id)
-      .select("-password -refreshToken");
+    const loggedInUser = await User.findById(user._id).select(
+      "-password -refreshToken",
+    );
 
     // Send Refresh Token as Cookie
     res.cookie("refreshToken", refreshToken, {
@@ -169,9 +162,7 @@ const login = async (req, res) => {
       accessToken,
       user: loggedInUser,
     });
-
   } catch (error) {
-
     // Zod Validation Error
     if (error instanceof z.ZodError) {
       return res.status(400).json({
@@ -189,5 +180,37 @@ const login = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(
+      {
+        _id: req.user._id,
+      },
+      {
+        $set: {
+          refreshToken: null,
+        },
+      },
+      { returnDocument : 'after'},
+    );
 
-export { register , login };
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    console.error("Logout Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+export { register, login , logout };
