@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, // also creates index by default
       trim: true,
       minlength: 3,
       maxlength: 30,
@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, // also creates index by default
       lowercase: true,
       trim: true,
     },
@@ -63,7 +63,5 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
 
 export default mongoose.model("User", userSchema);
