@@ -42,7 +42,8 @@ const register = async (req, res) => {
 
     const pepperedPassword = password + process.env.PASSWORD_PEPPER;
 
-    const hashedPassword = await bcrypt.hash(pepperedPassword, 10);
+    // used 12 round of hashing for higher production level security
+    const hashedPassword = await bcrypt.hash(pepperedPassword, 12);
 
     // Create User
     const user = await User.create({
