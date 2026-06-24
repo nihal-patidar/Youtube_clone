@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
+import {jwt } from 'jsonwebtoken'
 import { z } from "zod";
+
 
 const registerSchema = z.object({
   name: z
@@ -15,6 +17,18 @@ const registerSchema = z.object({
     .string()
     .min(6, "Password must be at least 6 characters")
     .max(20, "Password cannot exceed 20 characters"),
+});
+
+
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email("Please enter a valid email address"),
+
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters"),
 });
 
 const register = async (req, res) => {
@@ -77,5 +91,103 @@ const register = async (req, res) => {
     });
   }
 };
+
+
+export const login = async (req, res) => {
+  try {
+    // Body Validation
+    const validatedData = loginSchema.parse(req.body);
+
+    const { email, password } = validatedData;
+
+    // Check User Exists
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User does not exist",
+      });
+    }
+
+    // Compare Password
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!isPasswordCorrect) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid password",
+      });
+    }
+
+    // // Access Token
+    // const accessToken = jwt.sign(
+    //   {
+    //     id: user._id,
+    //     email: user.email,
+    //     role: user.role,
+    //   },
+    //   process.env.ACCESS_TOKEN_SECRET,
+    //   {
+    //     expiresIn: "15m",
+    //   }
+    // );
+
+    // // Refresh Token
+    // const refreshToken = jwt.sign(
+    //   {
+    //     id: user._id,
+    //   },
+    //   process.env.REFRESH_TOKEN_SECRET,
+    //   {
+    //     expiresIn: "7d",
+    //   }
+    // );
+
+    // Save Refresh Token
+    // user.refreshToken = refreshToken;
+    // await user.save();
+
+    // // Remove Sensitive Data
+    // const loggedInUser = await User.findById(user._id)
+    //   .select("-password -refreshToken");
+
+    // // Send Refresh Token as Cookie
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: "strict",
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      accessToken,
+      user: loggedInUser,
+    });
+
+  } catch (error) {
+
+    // Zod Validation Error
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        errors: error.errors,
+      });
+    }
+
+    console.error("Login Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 
 export { register };
