@@ -22,7 +22,7 @@ export const addComment = asyncHandler(async (req, res) => {
   const comment = await Comment.create({
     content,
     owner: req.user._id,
-    video: videoId,
+    videoId: videoId,
   });
 
   const populatedComment = await Comment.findById(comment._id).populate(
@@ -39,7 +39,7 @@ export const getComments = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
 
   const comments = await Comment.find({
-    video: videoId,
+    videoId: videoId,
   })
     .populate("owner", "name avatar")
     .sort({ createdAt: -1 });
@@ -50,8 +50,8 @@ export const getComments = asyncHandler(async (req, res) => {
 });
 
 export const updateComment = asyncHandler(async (req, res) => {
-  const { commentId } = req.params;
-  const { content } = req.body;
+  const { commentId } = req.params || {};
+  const { content } = req.body || {};
 
   const comment = await Comment.findById(commentId);
 

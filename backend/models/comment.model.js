@@ -8,7 +8,7 @@ const commentSchema = new mongoose.Schema(
       required: true,
     },
 
-    userId: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -28,7 +28,7 @@ const commentSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 commentSchema.index({ videoId: 1 });
