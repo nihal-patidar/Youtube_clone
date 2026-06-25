@@ -71,3 +71,23 @@ export const updateComment = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, comment, "Comment updated successfully"));
 });
+
+export const deleteComment = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+
+  const comment = await Comment.findById(commentId);
+
+  if (!comment) {
+    throw new ApiError(404, "Comment not found");
+  }
+
+  if (comment.owner.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, "Unauthorized");
+  }
+
+  await comment.deleteOne();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Comment deleted successfully"));
+});
