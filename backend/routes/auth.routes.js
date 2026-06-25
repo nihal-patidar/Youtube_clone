@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { login, register ,logout, refreshToken } from "../controllers/authController.js";
+import { login, register ,logout, refreshToken, getCurrentUser} from "../controllers/authController.js";
 import { verifyJWT } from "../middlewares/verifyJWT.js";
 
 const authRoutes = Router();
@@ -11,7 +11,9 @@ authRoutes.post('/login', login);
 
 authRoutes.post('/logout',verifyJWT,logout);
 
-authRoutes.post('/refresh-token',refreshToken)
+authRoutes.post('/refresh-token',refreshToken);
+
+authRoutes.get('/me', getCurrentUser);
 
 
 export default authRoutes ;
