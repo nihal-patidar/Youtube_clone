@@ -48,3 +48,24 @@ export const getAllVideos = asyncHandler(async (req, res) => {
     ),
   );
 });
+
+
+export const getVideoById = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+
+  const video = await Video.findById(videoId)
+    .populate("owner", "name avatar");
+
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+
+  // increase views
+  video.views += 1;
+  await video.save();
+
+  res.status(200).json({
+    success: true,
+    video,
+  });
+});
