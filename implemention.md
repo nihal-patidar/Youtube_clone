@@ -946,7 +946,7 @@ thumbnailUrl
 videoUrl
 duration
 channel
-uploader
+owner
 views
 likesCount
 dislikesCount

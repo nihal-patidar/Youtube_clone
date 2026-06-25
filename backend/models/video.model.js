@@ -35,7 +35,7 @@ const videoSchema = new mongoose.Schema(
       required: true,
     },
 
-    uploader: {
+    owner : {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
