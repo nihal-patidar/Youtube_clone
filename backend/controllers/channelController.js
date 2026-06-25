@@ -39,3 +39,20 @@ export const createChannel = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, channel, "Channel created successfully"));
 });
+
+export const getChannelByHandle = asyncHandler(async (req, res) => {
+  const { handle } = req.params;
+
+  const channel = await Channel.findOne({ handle }).populate(
+    "owner",
+    "name email avatar",
+  );
+
+  if (!channel) {
+    throw new ApiError(404, "Channel not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, channel, "Channel fetched successfully"));
+});
