@@ -8,7 +8,7 @@ const reactionSchema = new mongoose.Schema(
       required: true,
     },
 
-    userId: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -22,17 +22,17 @@ const reactionSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 reactionSchema.index(
   {
     videoId: 1,
-    userId: 1,
+    owner: 1,
   },
   {
     unique: true,
-  }
+  },
 );
 
 export default mongoose.model("Reaction", reactionSchema);
