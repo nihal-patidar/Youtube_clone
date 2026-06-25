@@ -34,3 +34,17 @@ export const addComment = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, populatedComment, "Comment added successfully"));
 });
+
+export const getComments = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+
+  const comments = await Comment.find({
+    video: videoId,
+  })
+    .populate("owner", "name avatar")
+    .sort({ createdAt: -1 });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, comments, "Comments fetched successfully"));
+});
