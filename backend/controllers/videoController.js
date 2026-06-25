@@ -5,7 +5,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import User from "../models/user.model.js";
 
 export const getAllVideos = asyncHandler(async (req, res) => {
-  const { search, category, page = 1, limit = 10 } = req.query || {}
+  const { search, category, page = 1, limit = 10 } = req.query || {};
 
   const filter = {};
 
@@ -49,12 +49,10 @@ export const getAllVideos = asyncHandler(async (req, res) => {
   );
 });
 
-
 export const getVideoById = asyncHandler(async (req, res) => {
-  const { videoId } = req.params || {}
+  const { videoId } = req.params || {};
 
-  const video = await Video.findById(videoId)
-    .populate("owner", "name avatar");
+  const video = await Video.findById(videoId).populate("owner", "name avatar");
 
   if (!video) {
     throw new ApiError(404, "Video not found");
@@ -70,31 +68,23 @@ export const getVideoById = asyncHandler(async (req, res) => {
   });
 });
 
-
 export const createVideo = asyncHandler(async (req, res) => {
-  const {
-    title,
-    description,
-    category,
-    videoUrl,
-    thumbnailUrl,
-  } = req.body || {} // handling destructuring error
-  if (
-    !title ||
-    !description ||
-    !category ||
-    !videoUrl ||
-    !thumbnailUrl
-  ) {
+  const { title, description, category, videoUrl, thumbnailUrl, channelId } =
+    req.body || {}; // handling destructuring error
+  if (!title || !description || !category || !videoUrl || !thumbnailUrl) {
     throw new ApiError(400, "All fields are required");
   }
 
+  if (!channelId) {
+    throw new ApiError(400, "ChannelId is required");
+  }
   const video = await Video.create({
     title,
     description,
     category,
     videoUrl,
     thumbnailUrl,
+    channel: channelId,
     owner: req.user._id,
   });
 
@@ -104,7 +94,6 @@ export const createVideo = asyncHandler(async (req, res) => {
     video,
   });
 });
-
 
 export const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
