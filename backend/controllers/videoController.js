@@ -21,6 +21,8 @@ export const getAllVideos = asyncHandler(async (req, res) => {
   }
 
   const videos = await Video.find(filter)
+    .populate("owner","avatar username")
+    .populate("channel", "name handle")
     .sort({ createdAt: -1 });
 
   res.status(200).json({
