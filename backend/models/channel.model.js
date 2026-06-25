@@ -57,6 +57,5 @@ const channelSchema = new mongoose.Schema(
   }
 );
 
-channelSchema.index({ handle: 1 });
 
 export default mongoose.model("Channel", channelSchema);

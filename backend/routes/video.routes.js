@@ -13,4 +13,5 @@ videoRoutes.post('/',verifyJWT,createVideo);
 videoRoutes.patch('/:videoId',verifyJWT,updateVideo);
 
 videoRoutes.delete('/:videoId',verifyJWT,deleteVideo);
-export default videoRoutes 
+
+export default videoRoutes ;

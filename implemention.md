@@ -1367,10 +1367,6 @@ POST /channels
 
 GET /channels/:handle
 
-PATCH /channels/:channelId
-
-DELETE /channels/:channelId
-
 GET /channels/:channelId/videos
 ```
 
