@@ -2,6 +2,7 @@ import Channel from "../models/channel.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import Video from "../models/video.model.js";
 
 export const createChannel = asyncHandler(async (req, res) => {
   const { channelName, handle, description, banner, avatar } = req.body || {};
@@ -55,4 +56,24 @@ export const getChannelByHandle = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, channel, "Channel fetched successfully"));
+});
+
+export const getChannelVideos = asyncHandler(async (req, res) => {
+  const { channelId } = req.params;
+
+  const channel = await Channel.findById(channelId);
+
+  if (!channel) {
+    throw new ApiError(404, "Channel not found");
+  }
+
+  const videos = await Video.find({
+    channel: channelId,
+  })
+    .populate("owner", "name avatar")
+    .sort({ createdAt: -1 });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, videos, "Channel videos fetched successfully"));
 });
