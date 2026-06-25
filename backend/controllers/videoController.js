@@ -5,7 +5,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import User from "../models/user.model.js";
 
 export const getAllVideos = asyncHandler(async (req, res) => {
-  const { search, category, page = 1, limit = 10 } = req.query;
+  const { search, category, page = 1, limit = 10 } = req.query || {}
 
   const filter = {};
 
@@ -51,7 +51,7 @@ export const getAllVideos = asyncHandler(async (req, res) => {
 
 
 export const getVideoById = asyncHandler(async (req, res) => {
-  const { videoId } = req.params;
+  const { videoId } = req.params || {}
 
   const video = await Video.findById(videoId)
     .populate("owner", "name avatar");
@@ -66,6 +66,41 @@ export const getVideoById = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
+    video,
+  });
+});
+
+
+export const createVideo = asyncHandler(async (req, res) => {
+  const {
+    title,
+    description,
+    category,
+    videoUrl,
+    thumbnailUrl,
+  } = req.body || {} // handling destructuring error
+  if (
+    !title ||
+    !description ||
+    !category ||
+    !videoUrl ||
+    !thumbnailUrl
+  ) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const video = await Video.create({
+    title,
+    description,
+    category,
+    videoUrl,
+    thumbnailUrl,
+    owner: req.user._id,
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "Video uploaded successfully",
     video,
   });
 });
