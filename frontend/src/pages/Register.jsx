@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import ProcessingSuccess from "../components/common/ProcessSuccess";
 import { register } from "../services/auth.service";
+import { registerSchema } from "../utils/validation";
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -14,22 +15,45 @@ export default function Register() {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setRegisterData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (registerData.password !== registerData.confirmPassword) return;
+    const result = registerSchema.safeParse(registerData);
 
-    register({
-      name: registerData.firstName + " " + registerData.lastName,
-      email: registerData.email,
-      password: registerData.password,
-    });
-    console.log(registerData);
+    if (!result.success) {
+      const fieldErrors = {};
+
+      result.error.issues.forEach((error) => {
+        fieldErrors[error.path[0]] = error.message;
+      });
+
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
+
+    setIsProcessing(true);
+
+    try {
+      await register({
+        name: `${registerData.firstName} ${registerData.lastName}`,
+        email: registerData.email,
+        password: registerData.password,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      navigate("/login");
+      setIsProcessing(false);
+    }
   };
+
   return (
     <div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center px-4 py-10">
       {isProcessing ? (
@@ -65,8 +89,18 @@ export default function Register() {
                       placeholder="First name"
                       value={registerData.firstName}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                      className={`w-full rounded px-3 py-3 outline-none focus:border-blue-500 ${
+                        errors.firstName
+                          ? "border border-red-500"
+                          : "border border-gray-300"
+                      }`}
                     />
+
+                    {errors.firstName && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {errors.firstName}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <input
@@ -75,8 +109,18 @@ export default function Register() {
                       placeholder="Last name"
                       value={registerData.lastName}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                      className={`w-full rounded px-3 py-3 outline-none focus:border-blue-500 ${
+                        errors.lastName
+                          ? "border border-red-500"
+                          : "border border-gray-300"
+                      }`}
                     />
+
+                    {errors.lastName && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {errors.lastName}
+                      </p>
+                    )}
                   </div>
                 </div>
                 {/* Email */}
@@ -87,11 +131,16 @@ export default function Register() {
                     placeholder="Your email address"
                     value={registerData.email}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                    className={`w-full rounded px-3 py-3 outline-none focus:border-blue-500 ${
+                      errors.email
+                        ? "border border-red-500"
+                        : "border border-gray-300"
+                    }`}
                   />
-                  <p className="text-xs text-gray-500 mt-2">
-                    You'll need to confirm that this email belongs to you.
-                  </p>
+
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                  )}
                 </div>
                 <button
                   type="button"
@@ -108,16 +157,36 @@ export default function Register() {
                       placeholder="Password"
                       value={registerData.password}
                       onChange={handleChange}
-                      className="border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                      className={`rounded px-3 py-3 outline-none focus:border-blue-500 ${
+                        errors.password
+                          ? "border border-red-500"
+                          : "border border-gray-300"
+                      }`}
                     />
+
+                    {errors.password && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {errors.password}
+                      </p>
+                    )}
                     <input
                       type={showPassword ? "text" : "password"}
                       name="confirmPassword"
                       placeholder="Confirm"
                       value={registerData.confirmPassword}
                       onChange={handleChange}
-                      className="border border-gray-300 rounded px-3 py-3 outline-none focus:border-blue-500"
+                      className={`rounded px-3 py-3 outline-none focus:border-blue-500 ${
+                        errors.confirmPassword
+                          ? "border border-red-500"
+                          : "border border-gray-300"
+                      }`}
                     />
+
+                    {errors.confirmPassword && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {errors.confirmPassword}
+                      </p>
+                    )}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
