@@ -101,16 +101,16 @@ Configured routing using `createBrowserRouter` and `RouterProvider`.
 
 ### Available Routes
 
-| Route | Page |
-|---------|---------|
-| / | Home |
-| /login | Login |
-| /register | Register |
-| /dashboard | Dashboard |
-| /video/:videoId | Video Player |
-| /channel/:channelId | Channel |
-| /create-channel | Create Channel |
-| * | Not Found |
+| Route               | Page           |
+| ------------------- | -------------- |
+| /                   | Home           |
+| /login              | Login          |
+| /register           | Register       |
+| /dashboard          | Dashboard      |
+| /video/:videoId     | Video Player   |
+| /channel/:channelId | Channel        |
+| /create-channel     | Create Channel |
+| \*                  | Not Found      |
 
 ### Layout Structure
 
@@ -247,7 +247,6 @@ Verified Tailwind functionality by applying utility classes to sample components
 - Consistent UI foundation prepared for future development.
 - Ready for responsive YouTube Clone interface implementation.
 
-
 ## 5. Axios Configuration & API Setup
 
 ### Installation
@@ -327,16 +326,16 @@ Configured application routing using `createBrowserRouter` and `RouterProvider`.
 
 ### Routes Implemented
 
-| Route | Description |
-|---------|---------|
-| / | Home Page |
-| /login | Login Page |
-| /register | Register Page |
-| /dashboard | Dashboard |
-| /video/:videoId | Video Player Page |
-| /channel/:channelId | Channel Page |
-| /create-channel | Create Channel Page |
-| * | Not Found Page |
+| Route               | Description         |
+| ------------------- | ------------------- |
+| /                   | Home Page           |
+| /login              | Login Page          |
+| /register           | Register Page       |
+| /dashboard          | Dashboard           |
+| /video/:videoId     | Video Player Page   |
+| /channel/:channelId | Channel Page        |
+| /create-channel     | Create Channel Page |
+| \*                  | Not Found Page      |
 
 ### Features
 
@@ -581,7 +580,7 @@ Manage video search functionality.
 
 ```javascript
 {
-  query: ""
+  query: "";
 }
 ```
 
@@ -612,7 +611,7 @@ Manage selected video category filters.
 
 ```javascript
 {
-  selectedCategory: "All"
+  selectedCategory: "All";
 }
 ```
 
@@ -664,3 +663,1376 @@ Prepared category-based filtering system for the homepage.
 - Channel Management
 - Backend API Integration
 ````
+
+---
+
+---
+
+## BACKEND DEVELOPMENT
+
+---
+
+# Implementation.md
+
+# YouTube Clone (MERN Stack) - Backend Implementation Progress
+
+## Project Overview
+
+This project is a full-stack YouTube Clone built using the MERN Stack.
+
+### Tech Stack
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
+- BcryptJS
+- Zod Validation
+- Cookie Parser
+- CORS
+
+---
+
+# Step 1: Initialize Backend Project
+
+Create backend folder:
+
+```bash
+mkdir backend
+cd backend
+```
+
+Initialize Node Project:
+
+```bash
+npm init -y
+```
+
+---
+
+# Step 2: Install Dependencies
+
+### Production Dependencies
+
+```bash
+npm install express mongoose dotenv cors cookie-parser bcryptjs jsonwebtoken zod
+```
+
+### Development Dependencies
+
+```bash
+npm install -D nodemon
+```
+
+---
+
+# Step 3: Configure Package.json
+
+```json
+{
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  }
+}
+```
+
+---
+
+# Step 4: Create Folder Structure
+
+```txt
+backend/
+│
+├── src/
+│
+├── config/
+│   └── db.js
+│
+├── controllers/
+│
+├── middlewares/
+│
+├── models/
+│
+├── routes/
+│
+├── validators/
+│
+├── utils/
+│
+├── app.js
+│
+└── server.js
+│
+├── .env
+├── package.json
+└── README.md
+```
+
+---
+
+# Step 5: Environment Variables
+
+Create `.env`
+
+```env
+PORT=5000
+
+MONGODB_URI=mongodb://localhost:27017/youtube_clone
+
+ACCESS_TOKEN_SECRET=your_access_secret
+
+REFRESH_TOKEN_SECRET=your_refresh_secret
+
+NODE_ENV=development
+```
+
+---
+
+# Step 6: Configure MongoDB Connection
+
+Create:
+
+```txt
+src/config/db.js
+```
+
+Responsibilities:
+
+- Connect MongoDB
+- Handle connection errors
+- Export database connection function
+
+---
+
+# Step 7: Create Express App
+
+Create:
+
+```txt
+src/app.js
+```
+
+Setup:
+
+- express.json()
+- cors()
+- cookieParser()
+- route mounting
+
+Example:
+
+```js
+app.use(express.json());
+
+app.use(cors());
+
+app.use(cookieParser());
+
+app.use("/api/v1", routes);
+```
+
+---
+
+# Step 8: Create Server
+
+Create:
+
+```txt
+src/server.js
+```
+
+Responsibilities:
+
+- Load environment variables
+- Connect database
+- Start server
+
+---
+
+# Step 9: Design Backend Architecture
+
+Instead of storing everything inside a single collection, create separate collections.
+
+Collections:
+
+```txt
+Users
+Channels
+Videos
+Comments
+Reactions
+Subscriptions
+Playlists
+WatchHistory
+```
+
+---
+
+# Step 10: Create User Schema
+
+File:
+
+```txt
+src/models/user.model.js
+```
+
+Fields:
+
+```js
+username;
+email;
+password;
+avatar;
+role;
+refreshToken;
+channel;
+```
+
+Indexes:
+
+```js
+email;
+username;
+```
+
+---
+
+# Step 11: Create Channel Schema
+
+File:
+
+```txt
+src/models/channel.model.js
+```
+
+Fields:
+
+```js
+owner;
+name;
+handle;
+description;
+logo;
+banner;
+subscribersCount;
+videosCount;
+totalViews;
+```
+
+---
+
+# Step 12: Create Video Schema
+
+File:
+
+```txt
+src/models/video.model.js
+```
+
+Fields:
+
+```js
+title;
+description;
+category;
+tags;
+thumbnailUrl;
+videoUrl;
+duration;
+channel;
+owner;
+views;
+likesCount;
+dislikesCount;
+commentsCount;
+visibility;
+```
+
+Indexes:
+
+```js
+title;
+category;
+channel;
+createdAt;
+```
+
+---
+
+# Step 13: Create Comment Schema
+
+File:
+
+```txt
+src/models/comment.model.js
+```
+
+Fields:
+
+```js
+video;
+user;
+content;
+isEdited;
+```
+
+---
+
+# Step 14: Create Reaction Schema
+
+Purpose:
+
+Store Like and Dislike information.
+
+Fields:
+
+```js
+video;
+user;
+reaction;
+```
+
+Reaction:
+
+```js
+like;
+dislike;
+```
+
+Compound Index:
+
+```js
+video + user;
+```
+
+Prevents duplicate reactions.
+
+---
+
+# Step 15: Create Subscription Schema
+
+Purpose:
+
+Store channel subscriptions.
+
+Fields:
+
+```js
+subscriber;
+channel;
+```
+
+---
+
+# Step 16: Create Playlist Schema
+
+Purpose:
+
+Store user playlists.
+
+Fields:
+
+```js
+owner;
+title;
+description;
+videos;
+```
+
+---
+
+# Step 17: Create Watch History Schema
+
+Purpose:
+
+Store recently watched videos.
+
+Fields:
+
+```js
+user;
+video;
+watchedAt;
+```
+
+---
+
+# Step 18: Create API Route Structure
+
+```txt
+src/routes/
+│
+├── index.js
+├── auth.routes.js
+├── channel.routes.js
+├── video.routes.js
+├── comment.routes.js
+├── reaction.routes.js
+├── subscription.routes.js
+├── playlist.routes.js
+└── history.routes.js
+```
+
+---
+
+# Step 19: Create Main Router
+
+File:
+
+```txt
+src/routes/index.js
+```
+
+Mount Routes:
+
+```js
+/auth
+/channels
+/videos
+/comments
+/reactions
+/subscriptions
+/playlists
+/history
+```
+
+---
+
+# Step 20: Create Authentication Routes
+
+File:
+
+```txt
+auth.routes.js
+```
+
+Endpoints:
+
+```http
+POST /register
+
+POST /login
+
+POST /logout
+
+POST /refresh-token
+
+GET /me
+```
+
+# Step 25: Create Authentication Validation
+
+Library:
+
+```txt
+Zod
+```
+
+File:
+
+```txt
+validators/auth.validation.js
+```
+
+Schemas:
+
+### Register Schema
+
+```js
+name;
+email;
+password;
+```
+
+### Login Schema
+
+```js
+email;
+password;
+```
+
+Responsibilities:
+
+- Validate input
+- Return proper error messages
+- Prevent invalid requests
+
+---
+
+# Step 26: Create Register Controller
+
+Responsibilities:
+
+### Validate Input
+
+```js
+registerSchema.parse(req.body);
+```
+
+### Check Existing User
+
+```js
+User.findOne();
+```
+
+### Hash Password
+
+```js
+bcrypt.hash(password, 10);
+```
+
+### Save User
+
+```js
+User.create();
+```
+
+### Return Success Response
+
+```json
+{
+  "success": true,
+  "message": "User registered successfully"
+}
+```
+
+---
+
+# Step 27: Create Login Controller
+
+Responsibilities:
+
+### Validate Input
+
+```js
+loginSchema.parse(req.body);
+```
+
+### Find User
+
+```js
+User.findOne({ email });
+```
+
+### Compare Password
+
+```js
+bcrypt.compare();
+```
+
+### Generate Access Token
+
+```js
+jwt.sign();
+```
+
+Expiry:
+
+```txt
+15 Minutes
+```
+
+### Generate Refresh Token
+
+```js
+jwt.sign();
+```
+
+Expiry:
+
+```txt
+7 Days
+```
+
+### Save Refresh Token
+
+```js
+user.refreshToken = refreshToken;
+```
+
+### Set HttpOnly Cookie
+
+```js
+res.cookie();
+```
+
+### Return Access Token
+
+```json
+{
+  "success": true,
+  "accessToken": "..."
+}
+```
+
+---
+
+# Step 28: JWT Authentication Strategy
+
+### Access Token
+
+Purpose:
+
+```txt
+Authorize API Requests
+```
+
+Expiry:
+
+```txt
+15 Minutes
+```
+
+---
+
+### Refresh Token
+
+Purpose:
+
+```txt
+Generate New Access Tokens
+```
+
+Expiry:
+
+```txt
+7 Days
+```
+
+Stored:
+
+```txt
+Database
+HttpOnly Cookie
+```
+
+---
+
+# Authentication Flow
+
+```txt
+Login
+ │
+ ▼
+Generate Access Token
+ │
+ ▼
+Generate Refresh Token
+ │
+ ▼
+Save Refresh Token
+ │
+ ▼
+Set Cookie
+ │
+ ▼
+Send Access Token
+```
+
+---
+
+# Refresh Flow
+
+```txt
+Access Token Expired
+        │
+        ▼
+POST /refresh-token
+        │
+        ▼
+Verify Refresh Token
+        │
+        ▼
+Generate New Access Token
+        │
+        ▼
+Return New Access Token
+```
+
+---
+
+# Step 21: Create Channel Routes
+
+Endpoints:
+
+```http
+POST /channels
+
+GET /channels/:handle
+
+GET /channels/:channelId/videos
+```
+
+---
+
+# Step 22: Create Video Routes
+
+Endpoints:
+
+```http
+GET /videos
+
+GET /videos/:videoId
+
+POST /videos
+
+PATCH /videos/:videoId
+
+DELETE /videos/:videoId
+```
+
+---
+
+# Step 23: Create Comment Routes
+
+Endpoints:
+
+```http
+GET /comments/video/:videoId
+
+POST /comments/video/:videoId
+
+PATCH /comments/:commentId
+
+DELETE /comments/:commentId
+```
+
+---
+
+# Step 24: Create Reaction Routes
+
+Endpoints:
+
+```http
+POST /reactions/like/:videoId
+
+POST /reactions/dislike/:videoId
+
+DELETE /reactions/:videoId
+```
+
+---
+
+---
+
+# Features Completed Till Now
+
+✅ Project Initialization
+
+✅ Folder Structure
+
+✅ MongoDB Setup Design
+
+✅ User Schema
+
+✅ Channel Schema
+
+✅ Video Schema
+
+✅ Comment Schema
+
+✅ Reaction Schema
+
+✅ Watch History Schema
+
+✅ Route Architecture
+
+✅ Authentication Route Design
+
+✅ JWT Authentication Design
+
+✅ Refresh Token Workflow
+
+✅ Register Controller
+
+✅ Login Controller
+
+✅ Zod Validation Setup
+
+# Implementation Log
+
+> **Project:** YouTube Clone (MERN Stack)
+>
+> This document records the implementation progress of the backend APIs developed during this phase of the project. It can be used as development documentation and as a reference while continuing future modules.
+
+---
+
+# Phase 1 - Backend Foundation
+
+## Step 1 : Create Utility Classes
+
+### Objective
+
+Create reusable utilities to reduce boilerplate code and maintain consistent API responses.
+
+---
+
+## 1. asyncHandler
+
+### Purpose
+
+Wrap asynchronous route handlers and automatically forward errors to Express error middleware.
+
+### Implementation
+
+- Created `utils/asyncHandler.js`
+- Eliminates repetitive `try...catch` blocks.
+- Uses:
+
+```javascript
+Promise.resolve(handler(req, res, next)).catch(next);
+```
+
+### Usage
+
+Instead of
+
+```javascript
+try {
+} catch (error) {}
+```
+
+controllers are now written as
+
+```javascript
+export const getVideos = asyncHandler(async(req,res)=>{
+    ...
+})
+```
+
+---
+
+## 2. ApiError
+
+### Purpose
+
+Create a custom Error class for standardized error handling.
+
+### File
+
+```
+utils/ApiError.js
+```
+
+### Features
+
+- Custom status code
+- Error message
+- Optional validation errors
+- Stack trace support
+- Consistent error format
+
+Example
+
+```javascript
+throw new ApiError(404, "Video not found");
+```
+
+---
+
+## 3. ApiResponse
+
+### Purpose
+
+Standardize every successful API response.
+
+### File
+
+```
+utils/ApiResponse.js
+```
+
+Example
+
+```javascript
+return res
+  .status(200)
+  .json(new ApiResponse(200, video, "Video fetched successfully"));
+```
+
+---
+
+## 4. Global Error Middleware
+
+Created
+
+```
+middlewares/error.middleware.js
+```
+
+Responsibilities
+
+- Catch all errors
+- Return consistent JSON
+- Hide stack trace in production
+- Return stack trace in development
+
+Registered after all routes.
+
+---
+
+# Phase 2 - Video Module
+
+---
+
+## Endpoint 1
+
+# GET /videos
+
+### Purpose
+
+Fetch all uploaded videos.
+
+### Features
+
+- Returns latest videos first
+- Search support
+- Category filter support
+- Populates uploader details
+
+Query Parameters
+
+```
+search
+category
+```
+
+Example
+
+```
+GET /videos?search=react
+
+GET /videos?category=Programming
+```
+
+---
+
+## Endpoint 2
+
+# GET /videos/:videoId
+
+### Purpose
+
+Fetch single video.
+
+### Features
+
+- Find by MongoDB ID
+- Populate owner
+- Increment views automatically
+- Return 404 if video doesn't exist
+
+---
+
+## Endpoint 3
+
+# POST /videos
+
+### Purpose
+
+Upload a new video.
+
+### Authentication
+
+Protected Route
+
+Requires JWT
+
+### Request Body
+
+```json
+{
+  "title": "",
+  "description": "",
+  "category": "",
+  "videoUrl": "",
+  "thumbnailUrl": ""
+}
+```
+
+### Validation
+
+Checks
+
+- title
+- description
+- category
+- videoUrl
+- thumbnailUrl
+
+Stores authenticated user as owner.
+
+---
+
+## Endpoint 4
+
+# PATCH /videos/:videoId
+
+### Purpose
+
+Update existing video.
+
+### Authentication
+
+Protected
+
+### Authorization
+
+Only owner can edit.
+
+### Updatable Fields
+
+- title
+- description
+- category
+- thumbnailUrl
+- videoUrl
+
+---
+
+## Endpoint 5
+
+# DELETE /videos/:videoId
+
+### Purpose
+
+Delete uploaded video.
+
+### Authentication
+
+Protected
+
+### Authorization
+
+Only owner can delete.
+
+Returns
+
+```
+Video deleted successfully
+```
+
+---
+
+# Testing Video APIs
+
+Created dummy requests for
+
+- GET All Videos
+- GET Single Video
+- POST Video
+- PATCH Video
+- DELETE Video
+
+Created multiple sample videos
+
+- React
+- Node.js
+- MongoDB
+- Express
+- Redux
+- Tailwind
+- Docker
+
+Used for testing
+
+- Search
+- Category Filter
+- CRUD operations
+
+---
+
+# Phase 3 - Channel Module
+
+---
+
+## Endpoint 1
+
+# POST /channels
+
+### Purpose
+
+Create a new YouTube channel.
+
+### Authentication
+
+Protected
+
+### Validation
+
+Checks
+
+- channelName
+- handle
+
+Business Rules
+
+- Handle must be unique
+- One user can own only one channel
+
+Stores
+
+- owner
+- avatar
+- banner
+- description
+
+---
+
+## Endpoint 2
+
+# GET /channels/:handle
+
+### Purpose
+
+Fetch public channel profile.
+
+### Returns
+
+- Channel Name
+- Description
+- Banner
+- Avatar
+- Owner Details
+
+Uses
+
+```
+populate()
+```
+
+to fetch owner information.
+
+---
+
+## Endpoint 3
+
+# GET /channels/:channelId/videos
+
+### Purpose
+
+Fetch all videos belonging to a channel.
+
+Returns
+
+- Latest videos first
+- Populated uploader information
+
+---
+
+# Channel Schema
+
+Created schema containing
+
+- channelName
+- handle
+- description
+- avatar
+- banner
+- subscribers
+- owner
+
+Added
+
+```javascript
+timestamps: true;
+```
+
+---
+
+# Video Schema Update
+
+Added
+
+```javascript
+channel;
+```
+
+reference
+
+```javascript
+channel:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Channel"
+}
+```
+
+Every uploaded video now belongs to a channel.
+
+---
+
+# Upload Authorization
+
+While uploading videos
+
+Added verification
+
+- Channel exists
+- Authenticated user owns that channel
+
+If validation fails
+
+Returns
+
+```
+403 Forbidden
+```
+
+---
+
+# Routing
+
+Created
+
+```
+routes/video.routes.js
+```
+
+Routes
+
+```
+GET /videos
+
+GET /videos/:videoId
+
+POST /videos
+
+PATCH /videos/:videoId
+
+DELETE /videos/:videoId
+```
+
+---
+
+Created
+
+```
+routes/channel.routes.js
+```
+
+Routes
+
+```
+POST /channels
+
+GET /channels/:handle
+
+GET /channels/:channelId/videos
+```
+
+---
+
+# Authentication
+
+Protected APIs
+
+```
+POST /videos
+
+PATCH /videos/:videoId
+
+DELETE /videos/:videoId
+
+POST /channels
+```
+
+Middleware Used
+
+```
+verifyJWT
+```
+
+---
+
+# Current Backend Features Completed
+
+- Authentication
+- JWT Protection
+- Async Handler Utility
+- Custom Error Handling
+- API Response Wrapper
+- Global Error Middleware
+- Video CRUD APIs
+- Search Videos
+- Filter Videos
+- Channel Creation
+- Fetch Channel Profile
+- Fetch Channel Videos
+- Ownership Authorization
+- Dummy API Testing Data
+
+---
+
+# Folder Structure
+
+```
+backend
+│
+├── controllers
+│   ├── auth.controller.js
+│   ├── video.controller.js
+│   └── channel.controller.js
+│
+├── routes
+│   ├── auth.routes.js
+│   ├── video.routes.js
+│   └── channel.routes.js
+│
+├── middlewares
+│   ├── verifyJWT.js
+│   └── error.middleware.js
+│
+├── utils
+│   ├── asyncHandler.js
+│   ├── ApiError.js
+│   └── ApiResponse.js
+│
+├── models
+│   ├── User.js
+│   ├── Video.js
+│   └── Channel.js
+│
+└── server.js
+```
+
+---
+
+# Next Development Phase
+
+The next implementation will focus on:
+
+- Comments API
+  - Add Comment
+  - Get Comments
+  - Update Comment
+  - Delete Comment
+
+- Like / Dislike APIs
+
+- Video Upload using Cloudinary
+
+- Watch History
+
+- Subscription System
+
+- Dashboard Analytics
+
+- Pagination
+
+- Recommended Videos
+
+- Trending Videos
+
+- Search Optimization
+
+- Production Deployment
+
+---
+
+```
+
+```
