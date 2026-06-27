@@ -33,7 +33,8 @@ const register = async (req, res) => {
 
     // Check Existing User via email or username // both should unique
     const existingUser = await User.findOne({
-      $or: [{ email }, { username: name }],
+      // $or: [{ email }, { username: name }],
+      email,
     });
 
     if (existingUser) {
@@ -191,7 +192,7 @@ const logout = async (req, res) => {
           refreshToken: null,
         },
       },
-      { returnDocument : 'after'},
+      { returnDocument: "after" },
     );
 
     res.clearCookie("refreshToken", {
@@ -216,9 +217,7 @@ const logout = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-
-    const incomingRefreshToken =
-      req.cookies?.refreshToken;
+    const incomingRefreshToken = req.cookies?.refreshToken;
 
     if (!incomingRefreshToken) {
       return res.status(401).json({
@@ -229,12 +228,10 @@ const refreshToken = async (req, res) => {
 
     const decodedToken = jwt.verify(
       incomingRefreshToken,
-      process.env.REFRESH_TOKEN_SECRET
+      process.env.REFRESH_TOKEN_SECRET,
     );
 
-    const user = await User.findById(
-      decodedToken.id
-    );
+    const user = await User.findById(decodedToken.id);
 
     if (!user) {
       return res.status(404).json({
@@ -243,9 +240,7 @@ const refreshToken = async (req, res) => {
       });
     }
 
-    if (
-      user.refreshToken !== incomingRefreshToken
-    ) {
+    if (user.refreshToken !== incomingRefreshToken) {
       return res.status(401).json({
         success: false,
         message: "Invalid refresh token",
@@ -261,16 +256,14 @@ const refreshToken = async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: "15m",
-      }
+      },
     );
 
     return res.status(200).json({
       success: true,
       accessToken,
     });
-
   } catch (error) {
-
     return res.status(401).json({
       success: false,
       message: "Refresh token expired or invalid",
@@ -278,16 +271,10 @@ const refreshToken = async (req, res) => {
   }
 };
 
-export const getCurrentUser = async (
-  req,
-  res
-) => {
+export const getCurrentUser = async (req, res) => {
   try {
-
-    const user = await User.findById(
-      req.user._id
-    ).select(
-      "-password -refreshToken"
+    const user = await User.findById(req.user._id).select(
+      "-password -refreshToken",
     );
 
     if (!user) {
@@ -301,9 +288,7 @@ export const getCurrentUser = async (
       success: true,
       user,
     });
-
   } catch (error) {
-
     console.error(error);
 
     return res.status(500).json({
@@ -313,5 +298,4 @@ export const getCurrentUser = async (
   }
 };
 
-
-export { register, login , logout , refreshToken};
+export { register, login, logout, refreshToken };

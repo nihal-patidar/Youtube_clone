@@ -6,6 +6,7 @@ import authRoutes from "./router.js";
 import router from "./router.js";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/error.handler.js";
+import requestLogger from "./middlewares/logger.middleware.js";
 import cors from "cors";
 dotenv.config();
 
@@ -19,6 +20,7 @@ server.use(
   }),
 );
 
+server.use(requestLogger);
 connectDB();
 
 server.use(express.json());
