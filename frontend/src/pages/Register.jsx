@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import ProcessingSuccess from "../components/common/ProcessSuccess";
+import { register } from "../services/auth.service";
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isProcessing , setIsProcessing] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false);
   const [registerData, setRegisterData] = useState({
     firstName: "",
     lastName: "",
@@ -19,6 +20,14 @@ export default function Register() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (registerData.password !== registerData.confirmPassword) return;
+
+    register({
+      name: registerData.firstName + " " + registerData.lastName,
+      email: registerData.email,
+      password: registerData.password,
+    });
     console.log(registerData);
   };
   return (

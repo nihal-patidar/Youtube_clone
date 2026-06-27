@@ -1,12 +1,11 @@
 import express from "express";
-import verifyJWT from "../middlewares/auth.middleware.js";
-
+import { verifyJWT } from "../middlewares/verifyJWT.js";
 import {
   likeVideo,
   dislikeVideo,
   removeReaction,
   getReaction,
-} from "../controllers/reaction.controller.js";
+} from "../controllers/reactionController.js";
 
 const reactionRoutes = express.Router();
 
