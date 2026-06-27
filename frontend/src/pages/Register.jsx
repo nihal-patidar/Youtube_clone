@@ -217,19 +217,6 @@ export default function Register() {
                 </div>
               </form>
             </div>
-            {/* Right Section */}
-            {/* <div className="hidden lg:flex flex-col items-center text-center">
-            
-            <img
-              src="/google-auth-side.png"
-              alt="Google"
-              className="w-64"
-            />
-            <p className="mt-6 text-gray-700 text-lg">
-              
-              One account. All of Google <br /> working for you.
-            </p>
-          </div> */}
           </div>
         </div>
       )}
