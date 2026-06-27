@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Eye, EyeOff } from "lucide-react";
@@ -17,7 +17,7 @@ export default function Login() {
   });
 
   const [errors, setErrors] = useState({});
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -54,7 +54,7 @@ export default function Login() {
 
       dispatch(loginSuccess(response.data));
 
-      // navigate("/")
+      navigate("/");
     } catch (error) {
       console.error(error);
     } finally {
