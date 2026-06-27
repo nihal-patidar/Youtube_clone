@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 // define initialState
 const initialState = {
   user: null,
-  token: localStorage.getItem("youtube-user-token") || null,
-  isAuthenticated: !!localStorage.getItem("youtube-user-token"),
+  token: null,
+  isAuthenticated: false,
 };
 
 const authSlice = createSlice({
@@ -24,8 +24,17 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
     },
+
+    setAccessToken: (state, action) => {
+      state.token = action.payload;
+    },
+
+    clearAccessToken: (state) => {
+      state.token = null;
+    },
   },
 });
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, setAccessToken, clearAccessToken } =
+  authSlice.actions;
 export default authSlice.reducer;
