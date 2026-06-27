@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  Menu,
-  Search,
-  Mic,
-  Bell,
-  UserCircle,
-  Sun,
-  Moon,
-} from "lucide-react";
-import YoutubeIcon from "../../assets/images/youtube.png"
+import { Menu, Search, Mic, Bell, UserCircle, Sun, Moon } from "lucide-react";
+import YoutubeIcon from "../../assets/images/youtube.png";
 
-function Navbar({ setIsSidebarOpen, user, onLogin }) {
+function Navbar({ setIsSidebarOpen, user, onLogin, navigate }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -18,8 +10,7 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
 
     if (
       savedTheme === "dark" ||
-      (!savedTheme &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
+      (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
       document.documentElement.classList.add("dark");
       setIsDarkMode(true);
@@ -94,9 +85,7 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
             <img src={YoutubeIcon} alt="youtube" />
           </span>
 
-          <h1 className="hidden sm:block text-xl font-semibold">
-            YouTube
-          </h1>
+          <h1 className="hidden sm:block text-xl font-semibold">YouTube</h1>
         </div>
       </div>
 
@@ -243,11 +232,7 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
             transition-colors
           "
         >
-          {isDarkMode ? (
-            <Sun size={20} />
-          ) : (
-            <Moon size={20} />
-          )}
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
         {user ? (
@@ -268,14 +253,14 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
             <div className="flex items-center gap-2">
               <UserCircle size={32} />
 
-              <span className="hidden lg:block">
-                {user.name}
-              </span>
+              <span className="hidden lg:block">{user.name}</span>
             </div>
           </>
         ) : (
           <button
-            onClick={onLogin}
+            onClick={() => {
+              navigate("/login");
+            }}
             className="
               flex
               items-center
@@ -299,9 +284,7 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
           >
             <UserCircle size={20} />
 
-            <span className="hidden sm:block">
-              Sign In
-            </span>
+            <span className="hidden sm:block">Sign In</span>
           </button>
         )}
       </div>

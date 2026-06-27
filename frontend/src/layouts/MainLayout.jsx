@@ -1,18 +1,17 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import Navbar from "../components/common/Navbar";
 import Sidebar from "../components/common/Sidebar";
 
 function MainLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] =
-    useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const navigate = useNavigate();
 
   return (
     <>
-      <Navbar
-        setIsSidebarOpen={setIsSidebarOpen}
-      />
+      <Navbar setIsSidebarOpen={setIsSidebarOpen} navigate={navigate} />
 
       <Sidebar
         isSidebarOpen={isSidebarOpen}
@@ -25,11 +24,7 @@ function MainLayout() {
           transition-all
           duration-300
 
-          ${
-            isSidebarOpen
-              ? "md:ml-[240px]"
-              : "md:ml-[72px]"
-          }
+          ${isSidebarOpen ? "md:ml-[240px]" : "md:ml-[72px]"}
         `}
       >
         <Outlet />
