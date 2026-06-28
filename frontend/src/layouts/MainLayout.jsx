@@ -3,15 +3,64 @@ import { useState } from "react";
 
 import Navbar from "../components/common/Navbar";
 import Sidebar from "../components/common/Sidebar";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getMe } from "../services/auth.service";
+import { clearUser, logout, setUser } from "../redux/slices/authSlice";
+import api from "../services/api";
 
 function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+  const user = useSelector((store) => store.auth.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        // User already exists in Redux
+        if (user) return;
+
+        // Fetch logged-in user
+        const meResponse = await getMe();
+
+        if (!meResponse?.user) {
+          return;
+        }
+
+        dispatch(setUser(meResponse.user));
+      } catch (error) {
+        console.error("Authentication initialization failed:", error);
+      }
+    };
+
+    initializeAuth();
+  }, [user, dispatch]);
+
+  const handleLogout = async () => {
+    try {
+      const logoutResponse = await api.post("/auth/logout");
+
+      if (!logoutResponse) return;
+
+      dispatch(logout());
+
+      navigate("/login");
+
+      console.log("Logout successful");
+    } catch (error) {
+      console.error("Logout Failed:", error);
+    }
+  };
 
   return (
     <>
-      <Navbar setIsSidebarOpen={setIsSidebarOpen} navigate={navigate} />
+      <Navbar
+        setIsSidebarOpen={setIsSidebarOpen}
+        navigate={navigate}
+        user={user}
+        handleLogout={handleLogout}
+      />
 
       <Sidebar
         isSidebarOpen={isSidebarOpen}

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Menu, Search, Mic, Bell, UserCircle, Sun, Moon } from "lucide-react";
 import YoutubeIcon from "../../assets/images/youtube.png";
+import ProfileCard from "./ProfileCard";
 
-function Navbar({ setIsSidebarOpen, user, onLogin, navigate }) {
+function Navbar({ setIsSidebarOpen, user, navigate, handleLogout }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -236,26 +237,7 @@ function Navbar({ setIsSidebarOpen, user, onLogin, navigate }) {
         </button>
 
         {user ? (
-          <>
-            <button
-              className="
-                p-2
-                rounded-full
-
-                hover:bg-[var(--bg-hover)]
-
-                transition-colors
-              "
-            >
-              <Bell size={20} />
-            </button>
-
-            <div className="flex items-center gap-2">
-              <UserCircle size={32} />
-
-              <span className="hidden lg:block">{user.name}</span>
-            </div>
-          </>
+          <ProfileCard user={user} handleLogout={handleLogout} />
         ) : (
           <button
             onClick={() => {
