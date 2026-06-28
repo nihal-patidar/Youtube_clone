@@ -15,11 +15,8 @@ function VideoGrid({ videos }) {
         gap-y-8
       "
     >
-      {videos.map((video) => (
-        <VideoCard
-          key={video.id}
-          video={video}
-        />
+      {videos?.map((video) => (
+        <VideoCard key={video._id} video={video} />
       ))}
     </div>
   );

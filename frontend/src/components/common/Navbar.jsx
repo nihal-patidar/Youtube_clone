@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Menu, Search, Mic, Bell, UserCircle, Sun, Moon } from "lucide-react";
 import YoutubeIcon from "../../assets/images/youtube.png";
 import ProfileCard from "./ProfileCard";
+import { useNavigate } from "react-router-dom";
 
 function Navbar({ setIsSidebarOpen, user, navigate, handleLogout }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -81,7 +83,12 @@ function Navbar({ setIsSidebarOpen, user, navigate, handleLogout }) {
           <Menu size={22} />
         </button>
 
-        <div className="flex items-center gap-1 cursor-pointer select-none">
+        <div
+          className="flex items-center gap-1 cursor-pointer select-none"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           <span className="text-red-600 text-2xl font-bold">
             <img src={YoutubeIcon} alt="youtube" />
           </span>
