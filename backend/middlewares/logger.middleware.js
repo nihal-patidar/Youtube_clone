@@ -21,6 +21,8 @@ const requestLogger = (req, res, next) => {
 
   console.log("🍪 Cookies   :", req.cookies);
 
+  console.log("📌 Header    :", req?.header?.Authorization);
+
   // Uncomment if you want to see all headers
   // console.log("📨 Headers   :", req.headers);
 

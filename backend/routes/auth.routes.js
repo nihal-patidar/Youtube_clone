@@ -1,19 +1,23 @@
-
 import { Router } from "express";
-import { login, register ,logout, refreshToken, getCurrentUser} from "../controllers/authController.js";
+import {
+  login,
+  register,
+  logout,
+  refreshToken,
+  getCurrentUser,
+} from "../controllers/authController.js";
 import { verifyJWT } from "../middlewares/verifyJWT.js";
 
 const authRoutes = Router();
 
-authRoutes.post('/register',register);
+authRoutes.post("/register", register);
 
-authRoutes.post('/login', login);
+authRoutes.post("/login", login);
 
-authRoutes.post('/logout',verifyJWT,logout);
+authRoutes.post("/logout", verifyJWT, logout);
 
-authRoutes.post('/refresh-token',refreshToken);
+authRoutes.post("/refresh-token", refreshToken);
 
-authRoutes.get('/me', getCurrentUser);
+authRoutes.get("/me", verifyJWT, getCurrentUser);
 
-
-export default authRoutes ;
+export default authRoutes;

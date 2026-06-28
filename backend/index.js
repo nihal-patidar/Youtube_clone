@@ -20,11 +20,10 @@ server.use(
   }),
 );
 
-server.use(requestLogger);
-connectDB();
-
 server.use(express.json());
 server.use(cookieParser());
+server.use(requestLogger);
+connectDB();
 
 server.use(router);
 
