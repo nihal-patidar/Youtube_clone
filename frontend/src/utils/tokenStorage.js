@@ -9,7 +9,7 @@ export const setAccessToken = (token) => {
 };
 
 export const getAccessToken = () => {
-  return appStore.getState().auth.accessToken;
+  return appStore.getState().auth.token;
 };
 
 export const clearAccessToken = () => {

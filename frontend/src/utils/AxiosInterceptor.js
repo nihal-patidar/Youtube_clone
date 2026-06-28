@@ -1,5 +1,5 @@
 import axios from "axios";
-// export default authApi;
+
 import {
   getAccessToken,
   setAccessToken,
@@ -7,6 +7,22 @@ import {
 } from "../utils/tokenStorage";
 
 import api from "../services/api";
+
+const authApi = axios.create({
+  baseURL: "http://localhost:3000",
+  withCredentials: true,
+});
+
+const skipUrls = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/logout",
+  "/auth/refresh-token",
+];
+
+let refreshPromise = null;
+
+/* ----------------------------- Request ----------------------------- */
 
 api.interceptors.request.use(
   (request) => {
@@ -16,17 +32,14 @@ api.interceptors.request.use(
       request.headers.Authorization = `Bearer ${token}`;
     }
 
+    console.log("Request , token ", token, request);
+
     return request;
   },
-  (error) => {
-    Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
-const authApi = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
-  withCredentials: true,
-});
+/* ----------------------------- Response ---------------------------- */
 
 api.interceptors.response.use(
   (response) => response,
@@ -34,39 +47,49 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Don't retry more than once
-    if (originalRequest._retry) {
+    if (!error.response || !originalRequest) {
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401) {
-      originalRequest._retry = true;
-
-      try {
-        // Refresh Token Request
-        const response = await authApi.post("/auth/refresh-token");
-
-        const newAccessToken = response.data.accessToken;
-
-        // Save New Token
-        setAccessToken(newAccessToken);
-
-        // Update Header
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-        // Retry Failed Request
-        return api(originalRequest);
-      } catch (refreshError) {
-        clearAccessToken();
-
-        // Redirect Login
-        window.location.href = "/login";
-
-        return Promise.reject(refreshError);
-      }
+    if (
+      originalRequest._retry ||
+      skipUrls.some((url) => originalRequest.url?.includes(url))
+    ) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    if (error.response.status !== 401) {
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      // Prevent multiple refresh requests
+      if (!refreshPromise) {
+        refreshPromise = authApi.post("/auth/refresh-token");
+      }
+
+      const response = await refreshPromise;
+
+      refreshPromise = null;
+
+      const { accessToken } = response.data;
+
+      setAccessToken(accessToken);
+
+      originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
+      return api(originalRequest);
+    } catch (refreshError) {
+      refreshPromise = null;
+
+      clearAccessToken();
+
+      window.location.replace("/login");
+
+      return Promise.reject(refreshError);
+    }
   },
 );
 
