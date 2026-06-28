@@ -5,7 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { loginSchema } from "../utils/validation";
 import { login } from "../services/auth.service";
 import ProcessingSuccess from "../components/common/ProcessSuccess";
-import { loginSuccess } from "../redux/slices/authSlice";
+import { loginSuccess, setLoading } from "../redux/slices/authSlice";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +53,7 @@ export default function Login() {
       console.log("Login Response", response);
 
       dispatch(loginSuccess(response.data));
-
+      dispatch(setLoading(false));
       navigate("/");
     } catch (error) {
       console.error(error);

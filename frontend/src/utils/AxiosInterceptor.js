@@ -7,6 +7,8 @@ import {
 } from "../utils/tokenStorage";
 
 import api from "../services/api";
+import appStore from "../redux/store";
+import { setLoading } from "../redux/slices/authSlice";
 
 const authApi = axios.create({
   baseURL: "http://localhost:3000",
@@ -107,6 +109,7 @@ api.interceptors.response.use(
 
       // Redirect user to login page.
       // window.location.replace("/");
+      appStore.dispatch(setLoading(false));
 
       // Pass error to the component.
       return Promise.reject(refreshError);
