@@ -5,13 +5,12 @@ import Navbar from "../components/common/Navbar";
 import Sidebar from "../components/common/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getMe } from "../services/auth.service";
 import { clearUser, logout, setUser } from "../redux/slices/authSlice";
 import api from "../services/api";
 
 function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const user = useSelector((store) => store.auth.user);
+  const user = useSelector((store) => store.auth.user); // only subscribed to user
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,13 +21,13 @@ function MainLayout() {
         if (user) return;
 
         // Fetch logged-in user
-        const meResponse = await getMe();
+        const meResponse = await api.get("/auth/me");
 
-        if (!meResponse?.user) {
-          return;
+        console.log("Me Response:", meResponse);
+
+        if (meResponse) {
+          dispatch(setUser(meResponse.data.user));
         }
-
-        dispatch(setUser(meResponse.user));
       } catch (error) {
         console.error("Authentication initialization failed:", error);
       }
@@ -45,7 +44,7 @@ function MainLayout() {
 
       dispatch(logout());
 
-      navigate("/login");
+      navigate("/");
 
       console.log("Logout successful");
     } catch (error) {
