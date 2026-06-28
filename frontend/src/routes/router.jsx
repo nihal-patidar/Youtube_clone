@@ -27,7 +27,7 @@ const routes = createBrowserRouter([
         ),
       },
       {
-        path: "video/:videoId",
+        path: "videos/:videoId",
         element: (
           <ProtectedRoute>
             <VideoPage />

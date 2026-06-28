@@ -1,8 +1,11 @@
 import { Bell, UserCircle, LogOut, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileCard({ user, handleLogout }) {
   const [showProfile, setShowProfile] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <div className="flex items-center gap-4 relative">
@@ -69,9 +72,59 @@ export default function ProfileCard({ user, handleLogout }) {
           </div>
 
           <div className="border-t border-[var(--border-color)]" />
+          {user.channel && (
+            <button
+              onClick={handleLogout}
+              className="
+              w-full
 
+              flex
+              items-center
+              gap-3
+
+              px-5
+              py-3
+
+
+              hover:bg-red-500/10
+
+              transition-colors
+            "
+            >
+              <LogOut size={18} />
+              My Channel
+            </button>
+          )}
+          {!user.channel && (
+            <button
+              onClick={() => {
+                navigate("/channel/create");
+              }}
+              className="
+              w-full
+
+              flex
+              items-center
+              gap-3
+
+              px-5
+              py-3
+
+          
+
+              hover:bg-red-500/10
+
+              transition-colors
+            "
+            >
+              <LogOut size={18} />
+              Create Channel
+            </button>
+          )}
           <button
-            onClick={handleLogout}
+            onClick={() => {
+              navigate(`/channel/${user.channel._id}`);
+            }}
             className="
               w-full
 
