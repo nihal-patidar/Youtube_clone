@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   token: null,
   isAuthenticated: false,
+  isRefreshToken: true, //
 };
 
 const authSlice = createSlice({
@@ -32,9 +33,28 @@ const authSlice = createSlice({
     clearAccessToken: (state) => {
       state.token = null;
     },
+
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+
+    clearUser: (state, action) => {
+      state.user = null;
+    },
+
+    setIsRefreshToken: (state, action) => {
+      state.isRefreshToken = false;
+    },
   },
 });
 
-export const { loginSuccess, logout, setAccessToken, clearAccessToken } =
-  authSlice.actions;
+export const {
+  loginSuccess,
+  logout,
+  setAccessToken,
+  clearAccessToken,
+  setUser,
+  clearUser,
+  setIsRefreshToken,
+} = authSlice.actions;
 export default authSlice.reducer;
