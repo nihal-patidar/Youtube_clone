@@ -11,24 +11,11 @@ export default function CreateChannel() {
     image: null,
   });
 
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
-
-  //   {
-  //   isOpen,
-  //   onClose
-  //   onCreate,
-  // }
-
-  const [preview, setPreview] = useState(null);
-
-  const handleChange = (e) => {
-    setChannelData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
   // console.log("")
 
@@ -37,32 +24,107 @@ export default function CreateChannel() {
 
     if (!file) return;
 
+    if (!file.type.startsWith("image/")) {
+      setErrors((prev) => ({
+        ...prev,
+        image: "Only image files are allowed.",
+      }));
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setErrors((prev) => ({
+        ...prev,
+        image: "Image size should be less than 2 MB.",
+      }));
+      return;
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      image: "",
+    }));
+
     setChannelData((prev) => ({
       ...prev,
       image: file,
     }));
 
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+
     setPreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = async () => {
-    if (!channelData.channelName.trim()) return;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    if (!channelData.handle.trim()) return;
+    setChannelData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const handleSubmit = async () => {
+    const validationErrors = {};
+
+    if (!channelData.channelName.trim()) {
+      validationErrors.channelName = "Channel name is required.";
+    }
+
+    if (!channelData.handle.trim()) {
+      validationErrors.handle = "Handle is required.";
+    }
+
+    if (Object.keys(validationErrors).length) {
+      setErrors(validationErrors);
+      return;
+    }
 
     try {
-      const response = await api.post("/channel/create", channelData);
+      setLoading(true);
+      const formData = new FormData();
 
-      console.log("create channel response", response.data.data);
+      formData.append("channelName", channelData.channelName);
+      formData.append("handle", channelData.handle);
+      formData.append("description", channelData.description);
+
+      if (channelData.image) {
+        formData.append("image", channelData.image);
+      }
+
+      console.log("FormData", channelData, formData);
+
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      const response = await api.post("/channel/create", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log(response.data);
 
       navigate(-1);
     } catch (err) {
-      if (error.status === 409) {
-        setErrors({ handle: "Channel handle already exists" });
+      console.log("Create channel", err);
+      if (err.response?.status === 409) {
+        setErrors({
+          handle: "This handle already exists.",
+        });
       }
+    } finally {
+      setLoading(false);
     }
   };
-
   // if (!isOpen) return null;
 
   return (
@@ -252,24 +314,30 @@ export default function CreateChannel() {
               Description
             </label>
 
-            <input
-              type="text"
-              name="handle"
+            <textarea
+              rows={4}
+              maxLength={500}
+              name="description"
               value={channelData.description}
               onChange={handleChange}
-              placeholder="Describe your channel"
+              placeholder="Tell viewers about your channel..."
               className="
-                  w-full
-                  rounded-xl
-                  border
-                  border-[var(--border-color)]
-                  bg-transparent
-                  px-4
-                  py-3
-                  outline-none
-                  focus:border-blue-500
-                "
+      w-full
+      rounded-xl
+      border
+      border-[var(--border-color)]
+      bg-transparent
+      px-4
+      py-3
+      outline-none
+      resize-none
+      focus:border-blue-500
+  "
             />
+
+            <div className="mt-1 text-right text-xs text-[var(--text-secondary)]">
+              {channelData.description.length}/500
+            </div>
           </div>
 
           {/* TERMS */}
