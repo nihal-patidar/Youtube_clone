@@ -1,25 +1,19 @@
 import { useEffect, useState } from "react";
-import {
-  Menu,
-  Search,
-  Mic,
-  Bell,
-  UserCircle,
-  Sun,
-  Moon,
-} from "lucide-react";
-import YoutubeIcon from "../../assets/images/youtube.png"
+import { Menu, Search, Mic, Bell, UserCircle, Sun, Moon } from "lucide-react";
+import YoutubeIcon from "../../assets/images/youtube.png";
+import ProfileCard from "./ProfileCard";
+import { useNavigate } from "react-router-dom";
 
-function Navbar({ setIsSidebarOpen, user, onLogin }) {
+function Navbar({ setIsSidebarOpen, user, navigate, handleLogout }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
 
     if (
       savedTheme === "dark" ||
-      (!savedTheme &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
+      (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
     ) {
       document.documentElement.classList.add("dark");
       setIsDarkMode(true);
@@ -89,14 +83,17 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
           <Menu size={22} />
         </button>
 
-        <div className="flex items-center gap-1 cursor-pointer select-none">
+        <div
+          className="flex items-center gap-1 cursor-pointer select-none"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           <span className="text-red-600 text-2xl font-bold">
             <img src={YoutubeIcon} alt="youtube" />
           </span>
 
-          <h1 className="hidden sm:block text-xl font-semibold">
-            YouTube
-          </h1>
+          <h1 className="hidden sm:block text-xl font-semibold">YouTube</h1>
         </div>
       </div>
 
@@ -243,39 +240,16 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
             transition-colors
           "
         >
-          {isDarkMode ? (
-            <Sun size={20} />
-          ) : (
-            <Moon size={20} />
-          )}
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
         {user ? (
-          <>
-            <button
-              className="
-                p-2
-                rounded-full
-
-                hover:bg-[var(--bg-hover)]
-
-                transition-colors
-              "
-            >
-              <Bell size={20} />
-            </button>
-
-            <div className="flex items-center gap-2">
-              <UserCircle size={32} />
-
-              <span className="hidden lg:block">
-                {user.name}
-              </span>
-            </div>
-          </>
+          <ProfileCard user={user} handleLogout={handleLogout} />
         ) : (
           <button
-            onClick={onLogin}
+            onClick={() => {
+              navigate("/login");
+            }}
             className="
               flex
               items-center
@@ -299,9 +273,7 @@ function Navbar({ setIsSidebarOpen, user, onLogin }) {
           >
             <UserCircle size={20} />
 
-            <span className="hidden sm:block">
-              Sign In
-            </span>
+            <span className="hidden sm:block">Sign In</span>
           </button>
         )}
       </div>

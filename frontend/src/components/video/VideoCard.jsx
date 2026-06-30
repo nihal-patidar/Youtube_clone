@@ -1,6 +1,8 @@
 import { MoreVertical } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function VideoCard({ video }) {
+  const navigate = useNavigate();
   return (
     <article
       className="
@@ -9,9 +11,14 @@ function VideoCard({ video }) {
       "
     >
       {/* Thumbnail */}
-      <div className="relative">
+      <div
+        className="relative"
+        onClick={() => {
+          navigate(`/videos/${video._id}`);
+        }}
+      >
         <img
-          src={video.thumbnail}
+          src={video.thumbnailUrl}
           alt={video.title}
           className="
             w-full
@@ -37,15 +44,15 @@ function VideoCard({ video }) {
             rounded
           "
         >
-          {video.duration}
+          {/* {video?.duration} */}
         </span>
       </div>
 
       {/* Details */}
       <div className="flex gap-3 mt-3">
         <img
-          src={video.avatar}
-          alt={video.channel}
+          src={video?.owner?.avatar}
+          alt={video?.channel?.name}
           className="
             w-9
             h-9
@@ -74,7 +81,7 @@ function VideoCard({ video }) {
               mt-1
             "
           >
-            {video.channel}
+            {video?.channel?.name}
           </p>
 
           <p
@@ -83,7 +90,7 @@ function VideoCard({ video }) {
               text-[var(--text-secondary)]
             "
           >
-            {video.views} • {video.uploaded}
+            {video?.views} • {video?.uploaded}
           </p>
         </div>
 

@@ -1,31 +1,57 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
-// define initialState 
+// define initialState
 const initialState = {
-    user : null,
-    token : localStorage.getItem("youtube-user-token") || null,
-    isAuthenticated : !!localStorage.getItem("youtube-user-token")
-}
+  user: null,
+  token: null,
+  loading: true,
+};
 
 const authSlice = createSlice({
-    name : "auth",
-    initialState,
+  name: "auth",
+  initialState,
 
-    reducers : {
-        login : (state,action)=>{
-            state.user = action.payload.user ;
-            state.token = action.payload.token ;
-            state.isAuthenticated = true ;
-        },
+  reducers: {
+    loginSuccess: (state, action) => {
+      console.log("loginSuccess ", action.payload);
+      state.user = action.payload.user;
+      state.token = action.payload.accessToken;
+    },
 
-        logout : (state,action)=>{
-            state.user = null;
-            state.token = null;
-            state.isAuthenticated = false ;
-        }
-    }
-})
+    logout: (state, action) => {
+      state.user = null;
+      state.token = null;
+    },
 
-export const {login , logout} = authSlice.actions ;
-export default authSlice.reducer ;
+    setAccessToken: (state, action) => {
+      state.token = action.payload;
+    },
+
+    clearAccessToken: (state) => {
+      state.token = null;
+    },
+
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+
+    clearUser: (state, action) => {
+      state.user = null;
+    },
+
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+  },
+});
+
+export const {
+  loginSuccess,
+  logout,
+  setAccessToken,
+  clearAccessToken,
+  setUser,
+  clearUser,
+  setLoading,
+} = authSlice.actions;
+export default authSlice.reducer;

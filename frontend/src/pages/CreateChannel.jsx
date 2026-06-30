@@ -1,16 +1,25 @@
 import { useState } from "react";
 import { Camera } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 
-export default function CreateChannel({
-  isOpen,
-  onClose,
-  onCreate,
-}) {
+export default function CreateChannel() {
   const [channelData, setChannelData] = useState({
     channelName: "",
     handle: "",
+    description: "",
     image: null,
   });
+
+  const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
+
+  //   {
+  //   isOpen,
+  //   onClose
+  //   onCreate,
+  // }
 
   const [preview, setPreview] = useState(null);
 
@@ -36,10 +45,22 @@ export default function CreateChannel({
     setPreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!channelData.channelName.trim()) return;
 
-    onCreate?.(channelData);
+    if (!channelData.handle.trim()) return;
+
+    try {
+      const response = await api.post("/channel/create", channelData);
+
+      console.log("create channel response", response.data.data);
+
+      navigate(-1);
+    } catch (err) {
+      if (error.status === 409) {
+        setErrors({ handle: "Channel handle already exists" });
+      }
+    }
   };
 
   // if (!isOpen) return null;
@@ -66,9 +87,7 @@ export default function CreateChannel({
       >
         {/* HEADER */}
         <div className="px-6 py-5">
-          <h2 className="text-2xl font-semibold">
-            How you'll appear
-          </h2>
+          <h2 className="text-2xl font-semibold">How you'll appear</h2>
         </div>
 
         {/* BODY */}
@@ -221,6 +240,38 @@ export default function CreateChannel({
             </div>
           </div>
 
+          <div>
+            <label
+              className="
+                  mb-1
+                  block
+                  text-sm
+                  text-[var(--text-secondary)]
+                "
+            >
+              Description
+            </label>
+
+            <input
+              type="text"
+              name="handle"
+              value={channelData.description}
+              onChange={handleChange}
+              placeholder="Describe your channel"
+              className="
+                  w-full
+                  rounded-xl
+                  border
+                  border-[var(--border-color)]
+                  bg-transparent
+                  px-4
+                  py-3
+                  outline-none
+                  focus:border-blue-500
+                "
+            />
+          </div>
+
           {/* TERMS */}
           <p
             className="
@@ -230,10 +281,9 @@ export default function CreateChannel({
               text-[var(--text-secondary)]
             "
           >
-            By clicking Create Channel you agree to the
-            YouTube Terms of Service. Changes made to your
-            name and profile picture are visible only on
-            YouTube and not other Google services.
+            By clicking Create Channel you agree to the YouTube Terms of
+            Service. Changes made to your name and profile picture are visible
+            only on YouTube and not other Google services.
           </p>
 
           {/* ACTIONS */}
@@ -246,7 +296,9 @@ export default function CreateChannel({
             "
           >
             <button
-              onClick={onClose}
+              onClick={() => {
+                navigate(-1);
+              }}
               className="
                 rounded-full
                 px-5
