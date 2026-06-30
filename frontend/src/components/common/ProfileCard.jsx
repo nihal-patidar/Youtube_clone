@@ -74,7 +74,7 @@ export default function ProfileCard({ user, handleLogout }) {
           <div className="border-t border-[var(--border-color)]" />
           {user.channel && (
             <button
-              onClick={handleLogout}
+              onClick={() => navigate(`/channel/${user.channel}`)}
               className="
               w-full
 
@@ -122,9 +122,7 @@ export default function ProfileCard({ user, handleLogout }) {
             </button>
           )}
           <button
-            onClick={() => {
-              navigate(`/channel/${user.channel._id}`);
-            }}
+            onClick={handleLogout}
             className="
               w-full
 
