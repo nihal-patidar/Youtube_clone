@@ -3,12 +3,18 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import Video from "../models/video.model.js";
+import User from "../models/user.model.js";
+import uploadToCloudinary from "../utils/uploadToCloudinary.js";
 
 export const createChannel = asyncHandler(async (req, res) => {
-  const { channelName, handle, description, banner, avatar } = req.body || {};
+  const { channelName, handle, description, image } = req.body || {};
 
   if (!channelName || !handle) {
     throw new ApiError(400, "Channel name and handle are required");
+  }
+
+  if (!req.file.path) {
+    throw new ApiError(400, "Channel profile image is required");
   }
 
   // check handle uniqueness
@@ -27,14 +33,30 @@ export const createChannel = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User already owns a channel");
   }
 
-  const channel = await Channel.create({
+  const result = await uploadToCloudinary(
+    req.file.path,
+    "youtube-clone/avatar",
+    "image",
+  );
+
+  console.log("result upload image", result);
+
+  let channel = await Channel.create({
     name: channelName,
     handle,
     description,
-    banner,
-    avatar,
+    avatar: result.url,
     owner: req.user._id,
   });
+
+  const user = await User.findByIdAndUpdate(req.user._id, {
+    $set: { channel: channel._id },
+  });
+
+  channel = await Channel.findById(channel._id).populate(
+    "owner",
+    "name email avatar",
+  );
 
   return res
     .status(201)

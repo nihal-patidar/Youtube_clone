@@ -32,7 +32,7 @@ const channelSchema = new mongoose.Schema(
       default: "",
     },
 
-    banner: {
+    avatar: {
       type: String,
       default: "",
     },
@@ -54,8 +54,7 @@ const channelSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
-
 
 export default mongoose.model("Channel", channelSchema);

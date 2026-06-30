@@ -5,10 +5,11 @@ import {
   getChannelVideos,
 } from "../controllers/channelController.js";
 import { verifyJWT } from "../middlewares/verifyJWT.js";
+import upload from "../middlewares/multer.middleware.js";
 
 const channelRoutes = Router();
 
-channelRoutes.post("/create", verifyJWT, createChannel);
+channelRoutes.post("/create", verifyJWT, upload.single("image"), createChannel);
 
 channelRoutes.get("/:handle", getChannelByHandle);
 
